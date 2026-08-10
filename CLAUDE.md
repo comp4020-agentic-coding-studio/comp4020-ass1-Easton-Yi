@@ -173,5 +173,7 @@ Before planning or implementing the site, read:
 Use `docs/ASS_QA_NOTES.md` only when working on `PROCESS.md`,
 `reflections/ass-1.md`, design rationale or assignment preparation.
 
+Final check for the repo according this project text requirments/specification, in `spec/Ass1_spec.md`.
+
 Do not invent facts, events, user experiences or agent corrections.
 The repository starter contract and course checks take precedence.
