@@ -1,10 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-// Core-interaction increment (docs/PROJECT_BRIEF.md, Act 2 only): native
-// scroll drives the Koch construction. No intro/compass/resolution act, no
-// colour system yet — those are later increments per the brief's
-// development sequence.
+// Narrative-shell increment (docs/PROJECT_BRIEF.md, Act 1 + Act 3): adds the
+// intro question/compass and the mathematical resolution around the existing
+// Act 2 scroll interaction. No colour system, arc transition, veil, or tide
+// effect yet, and no postscript coda (docs/EPILOGUE.md) — that's gated on
+// this resolution being verified first, per the brief's development
+// sequence.
 const revealCopy = [
   "Every segment becomes four. Each new segment is one third as long.",
   "Measure it as a line: the total grows by 4/3 at every step.",
@@ -14,13 +16,24 @@ const revealCopy = [
 ];
 ---
 
-<Layout title="Koch snowflake — scroll interaction (test view)">
+<Layout title="How long is Norway's coastline? — a Hausdorff dimension explainer">
   <header>
     <nav aria-label="Primary">
       <a href="./">Home</a>
     </nav>
   </header>
   <main>
+    <section id="intro-scene" class="intro-scene" aria-label="Introduction">
+      <div class="intro-copy">
+        <p class="intro-line" data-line="1">
+          Before we begin, consider one question&hellip;
+        </p>
+        <p class="intro-line" data-line="2">How long is Norway&rsquo;s coastline?</p>
+      </div>
+      <button id="compass-button" class="compass-button" type="button">
+        Continue to the Koch snowflake construction
+      </button>
+    </section>
     <section
       id="koch-scene"
       class="koch-scene"
@@ -75,6 +88,37 @@ const revealCopy = [
         </div>
       </div>
     </section>
+    <section id="resolution-scene" class="resolution-scene" aria-label="Resolution">
+      <p class="resolution-line" data-stage="1">
+        Length says infinity. Area says zero. Dimension tells us which measure
+        fits.
+      </p>
+      <pre class="resolution-formula" data-stage="2">M_s(epsilon) = N(epsilon) * epsilon^s</pre>
+      <pre class="resolution-formula" data-stage="3">4 copies, each scaled to 1/3
+D = log(4) / log(3) &#8776; 1.262</pre>
+      <p class="resolution-line" data-stage="4">
+        Below D, the scale-weighted measure explodes. Above D, it vanishes. D
+        is the critical exponent between a line (1) and a plane (2).
+      </p>
+      <details class="resolution-detail" data-stage="5">
+        <summary>Formal definition</summary>
+        <pre>H^s_delta(F) = inf sum_i diam(U_i)^s
+dim_H(F) = inf &#123; s : H^s(F) = 0 &#125;</pre>
+        <p>
+          Cover the set with pieces no larger than delta, choose the cheapest
+          such cover, then let delta shrink. The critical exponent is its
+          Hausdorff dimension.
+        </p>
+      </details>
+      <p class="resolution-line" data-stage="6">
+        Norway is not a perfect mathematical fractal. But the same
+        measurement problem returns: a smaller step follows more detail, so a
+        coastline length is incomplete without its scale and convention.
+      </p>
+      <p class="resolution-final" data-stage="7">The ruler is part of the answer.</p>
+    </section>
   </main>
+  <script src="../scripts/intro.ts"></script>
   <script src="../scripts/koch-scene.ts"></script>
+  <script src="../scripts/resolution.ts"></script>
 </Layout>

@@ -111,3 +111,48 @@ the brief exists (see `docs/PROJECT_BRIEF.md` "Development sequence").
   (`PROCESS.md`, `reflections/`). Next proposed increment: the narrative
   shell (intro framing + Norway question before the Koch scene, and the
   resolution/coda act after it), still without colour/visual polish.
+- Built the narrative shell (Act 1 intro/compass + Act 3 resolution), still
+  no colour system, Norway silhouette, arc transition, or tide effect —
+  those are the brief's step-5 visual-refinement increment, not this one.
+  Added `src/scripts/intro.ts` and `src/scripts/resolution.ts`, plus two new
+  `<section>`s in `index.astro` (`#intro-scene`, `#resolution-scene`) around
+  the existing `#koch-scene`.
+  - Intro is a normal (non-sticky) section, so native scrolling past it
+    already works without any scroll-jacking; the script only handles the
+    optional staged reveal of the two question lines and the compass
+    button's reveal/skip. A click anywhere in the intro (other than the
+    compass) or `prefers-reduced-motion: reduce` completes the reveal
+    immediately. The compass is a real `<button>`, so Enter/Space activation
+    is native — no extra keydown handling needed. Clicking/activating it
+    calls `scrollIntoView` on `#koch-scene` and moves focus to its `h1` for
+    keyboard users.
+  - Resolution reveals its seven stages once via `IntersectionObserver`
+    (unobserved after reveal, so it's monotonic — scrolling back up cannot
+    hide it again), or immediately under reduced motion / if
+    `IntersectionObserver` is unavailable. Copy is the brief's exact English
+    text for the primary statement, the covering-measure expression, the
+    Koch calculation, the explanation, an optional `<details>` for the
+    formal Hausdorff-measure definition, the return-to-Norway line, and the
+    final line ("The ruler is part of the answer.").
+  - Deliberately deferred: the postscript coda from `docs/EPILOGUE.md`. Its
+    own instructions gate it on "the Norway question, Koch interaction,
+    measurement readouts, and mathematical resolution ... working and
+    verified" — i.e. on this increment being done and checked first — so it
+    is the next proposed increment, not part of this one.
+  - Verified with Playwright at both marking viewports: initial load leaves
+    the compass non-interactive (`opacity:0; pointer-events:none`); clicking
+    the intro copy reveals both lines and the compass; pressing Enter on the
+    focused compass scrolls to and focuses the Koch scene's heading;
+    scrolling to the document bottom reveals all seven resolution stages;
+    `prefers-reduced-motion: reduce` shows the full intro and full
+    resolution immediately with no timers/observer delay; no horizontal
+    overflow and no console errors in any of these states.
+  - `pnpm check` green: 35 tests across 4 files (this increment didn't add
+    new DOM-behaviour unit tests — timers/`IntersectionObserver`/reduced-
+    motion state are exactly the kind of thing this repo verifies with a
+    real rendered browser rather than a mocked DOM, consistent with the
+    stroke-width and overflow-x bugs from the previous increment).
+  - Updated `<title>` to reflect the whole page ("How long is Norway's
+    coastline? — a Hausdorff dimension explainer"); the single `<h1>`
+    invariant still holds (`Meet the Koch snowflake.` is the only `h1`, on
+    the Koch scene, per `spec/invariants.test.ts`).
