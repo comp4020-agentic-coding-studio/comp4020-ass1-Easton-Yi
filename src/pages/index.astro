@@ -1,12 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { NORWAY_PATH, NORWAY_VIEWBOX } from "../lib/norway.ts";
 
-// Narrative-shell increment (docs/PROJECT_BRIEF.md, Act 1 + Act 3) plus the
-// postscript coda (docs/EPILOGUE.md). Still no colour system, arc
-// transition, veil, or tide effect, and no Norway silhouette/ruler-readout
-// choreography — those need the visual system (step 5) that doesn't exist
-// yet, so the coda here is the same plain, text-only treatment as the
-// resolution above it.
+// Visual-refinement increment (docs/PROJECT_BRIEF.md, step 5): colour system,
+// Norway silhouette, arc divider, and the postscript's coastline echo /
+// disappearing readout (docs/EPILOGUE.md). Tide effect is an explicit
+// stretch goal in the brief and is not implemented here.
 const revealCopy = [
   "Every segment becomes four. Each new segment is one third as long.",
   "Measure it as a line: the total grows by 4/3 at every step.",
@@ -24,6 +23,15 @@ const revealCopy = [
   </header>
   <main>
     <section id="intro-scene" class="intro-scene" aria-label="Introduction">
+      <svg
+        class="intro-silhouette"
+        viewBox={NORWAY_VIEWBOX}
+        preserveAspectRatio="xMidYMid slice"
+        aria-hidden="true"
+      >
+        <path d={NORWAY_PATH} />
+      </svg>
+      <div class="intro-voile" aria-hidden="true"></div>
       <div class="intro-copy">
         <p class="intro-line" data-line="1">
           Before we begin, consider one question&hellip;
@@ -31,8 +39,16 @@ const revealCopy = [
         <p class="intro-line" data-line="2">How long is Norway&rsquo;s coastline?</p>
       </div>
       <button id="compass-button" class="compass-button" type="button">
-        Continue to the Koch snowflake construction
+        Begin the journey
       </button>
+      <svg
+        class="intro-arc"
+        viewBox="0 0 100 10"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path d="M 0 10 L 0 6 Q 50 -4 100 6 L 100 10 Z" />
+      </svg>
     </section>
     <section
       id="koch-scene"
@@ -118,6 +134,17 @@ dim_H(F) = inf &#123; s : H^s(F) = 0 &#125;</pre>
       <p class="resolution-final" data-stage="7">The ruler is part of the answer.</p>
     </section>
     <section id="postscript-scene" class="postscript-scene" aria-label="Postscript">
+      <svg
+        class="postscript-coastline"
+        viewBox={NORWAY_VIEWBOX}
+        preserveAspectRatio="xMidYMid meet"
+        aria-hidden="true"
+      >
+        <path d={NORWAY_PATH} />
+      </svg>
+      <p class="postscript-readout" id="postscript-readout" aria-hidden="true">
+        Iteration 5 &middot; D &#8776; 1.262
+      </p>
       <p class="postscript-label">A postscript</p>
       <p class="postscript-line" data-stage="1">
         We use simple measures

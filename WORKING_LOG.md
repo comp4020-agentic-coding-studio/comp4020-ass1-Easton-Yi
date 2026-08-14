@@ -191,3 +191,60 @@ the brief exists (see `docs/PROJECT_BRIEF.md` "Development sequence").
   - `pnpm check` green: 35 tests across 4 files (same as the previous
     increment — no new pure-function logic was added, just DOM reveal
     wiring already covered by the resolution's pattern).
+- Built the visual-refinement increment (docs/PROJECT_BRIEF.md step 5):
+  colour system, Norway silhouette, arc divider/voile, dark Act 2 field,
+  pale Act 3/postscript field, coastline echo, and the disappearing readout.
+  Tide effect (explicit stretch goal) was not attempted.
+  - Sourced the Norway silhouette from Natural Earth's public-domain 1:10m
+    admin-0 countries data (`ne_10m_admin_0_countries.geojson`, official
+    `nvkelso/natural-earth-vector` mirror). First tried
+    `georgique/world-geojson` as a shortcut, but its GitHub licence metadata
+    came back GPL-3.0 — rejected outright, since the brief requires
+    public-domain sourcing. Extracted Norway's mainland ring (index 0 of 120
+    polygons in the `MultiPolygon`, 7911 points; the other 119 are small
+    islands, deliberately excluded), simplified it with a from-scratch
+    Ramer-Douglas-Peucker implementation (epsilon = 0.15 degrees → 317
+    points), and projected lon/lat to a 300x700 viewBox with a y-flip so
+    north renders up. Saved as `src/lib/norway.ts` (`NORWAY_PATH`,
+    `NORWAY_VIEWBOX`), imported directly as SVG path data — no image asset,
+    no tracing of the reference screenshots.
+  - Added the brief's exact colour palette as CSS custom properties
+    (`--mist`, `--sky`, `--fjord`, `--fjord-deep`, `--foam`, `--compass`,
+    `--ink`) to `src/styles/global.css`.
+  - Act 1: mist-to-sky gradient field, the Norway silhouette behind a
+    translucent voile gradient, and a concave arc divider (inline SVG path)
+    into Act 2. Restyled the compass as a solid `--compass` red pill with a
+    visible red-outline + foam-ring focus state. Also fixed a copy
+    discrepancy caught while re-reading `docs/CONTENT_SOURCES.md`: the
+    compass's visible text was still "Continue to the Koch snowflake
+    construction" from the narrative-shell increment; the copy deck specifies
+    the accessible name "Begin the journey", so the visible text now matches
+    exactly (simplest way to guarantee that accessible name).
+  - Act 2: `.koch-sticky` restyled to a dark `--fjord-deep` field with
+    `--foam` SVG strokes and text. Added a `--scene-blend` CSS custom
+    property, set from `koch-scene.ts`'s existing scroll-driven `update()`
+    (no new scroll handler), that blends the background toward Act 1's sky /
+    Act 3's mist only within the first/last 10% of scroll progress — pinned
+    to a flat `--fjord-deep` under `prefers-reduced-motion: reduce`.
+  - Act 3 + postscript: pale mist-to-foam gradient field, ink text,
+    fjord-tinted formula blocks. Postscript gained a small, low-opacity
+    Norway coastline echo (reusing `norway.ts`) and a monospace "readout"
+    line that fades out first via a CSS class toggled in the existing
+    `IntersectionObserver` callback in `postscript.ts`, followed by the three
+    text beats revealing in sequence via staggered `transition-delay` —
+    matching `docs/EPILOGUE.md`'s "readout fades first, coastline lingers"
+    choreography without any new scroll/observer logic.
+  - `pnpm check` green: 35 tests across 4 files, 0 typecheck/lint errors.
+  - Verified with Playwright (Chromium) at both marking viewports, serving
+    the real `dist/` build under its `/comp4020-ass1-Easton-Yi/` base path
+    (a first attempt serving from `/` produced a spurious CSS 404 and an
+    all-black, unstyled silhouette — a test-harness bug, not a site bug, once
+    the base path was handled correctly the palette/silhouette/arc all
+    rendered as designed). Confirmed: no horizontal overflow at either
+    viewport; keyboard-only Space/End scrolling drives the full intro → Koch
+    (iteration 0→5) → resolution → postscript sequence; the compass reads
+    "Begin the journey" and is keyboard-focusable with a visible red+foam
+    focus ring; `prefers-reduced-motion: reduce` pins the Act 2 field to a
+    flat colour (no scroll-driven blend) while all copy and states stay
+    reachable; the postscript readout fades and the coastline echo persists
+    behind the revealed text; no console errors.

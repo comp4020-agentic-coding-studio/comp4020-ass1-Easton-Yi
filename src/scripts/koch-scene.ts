@@ -16,6 +16,7 @@ import { computeProgress, iterationForProgress, nextMaxRevealStage } from "../li
 const scene = document.querySelector<HTMLElement>("#koch-scene");
 
 if (scene) {
+  const sticky = scene.querySelector<HTMLElement>(".koch-sticky");
   const wrapper = scene.querySelector<SVGGElement>("#koch-wrapper");
   const path = scene.querySelector<SVGPathElement>("#koch-path");
   const revealItems = Array.from(scene.querySelectorAll<HTMLElement>("[data-stage]"));
@@ -80,6 +81,14 @@ if (scene) {
     if (wrapper) {
       const scale = reduceMotion.matches ? 1 : 1 + progress * 1.6;
       wrapper.style.setProperty("--camera-scale", String(scale));
+    }
+
+    if (sticky && !reduceMotion.matches) {
+      // Blend the sticky field toward Act 1's sky / Act 3's mist within the
+      // first and last 10% of progress, full fjord-deep in the middle.
+      const edge = 0.1;
+      const blend = Math.min(progress / edge, (1 - progress) / edge, 1);
+      sticky.style.setProperty("--scene-blend", String(Math.max(0, blend)));
     }
   }
 

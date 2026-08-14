@@ -4,15 +4,20 @@ const section = document.querySelector<HTMLElement>("#postscript-scene");
 
 if (section) {
   const items = Array.from(section.querySelectorAll<HTMLElement>("[data-stage]"));
+  const readout = section.querySelector<HTMLElement>("#postscript-readout");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   if (reduceMotion.matches || !("IntersectionObserver" in window)) {
+    readout?.classList.add("faded");
     for (const item of items) item.classList.add("revealed");
   } else {
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
+          // docs/EPILOGUE.md: the readout fades first, then the text beats
+          // reveal in sequence (see the transition-delay steps in global.css).
+          readout?.classList.add("faded");
           entry.target.classList.add("revealed");
           observer.unobserve(entry.target);
         }
