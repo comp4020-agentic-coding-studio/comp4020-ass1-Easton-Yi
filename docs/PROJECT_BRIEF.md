@@ -8,15 +8,23 @@ Alternative short title: **How Long Is Norway?**
 
 ## Product thesis
 
-Build a static, client-side interactive explainer around one claim:
+Build a static, client-side interactive explainer around a three-tier claim,
+in priority order — the site must open with tier 1, leave the visitor with
+tier 2, and use tier 3 only as support, never as the opening thesis:
 
-> Dimension is the exponent that makes measurement stable as the measuring scale shrinks.
+1. **Primary idea:** the smaller the ruler, the longer the measured
+   coastline becomes.
+2. **Primary conclusion:** a coastline has no single length until the
+   measuring scale and convention are specified.
+3. **Secondary mathematical explanation:** Hausdorff dimension does not
+   give Norway one true length; for an exact fractal such as the Koch
+   curve, it describes how measurement scales as the ruler shrinks.
 
-The experience begins with the everyday question of Norway's coastline, uses the Koch snowflake as an exact mathematical model, introduces Hausdorff dimension as a critical measurement exponent, and then returns to the coastline question. The visitor should discover why ordinary length becomes infinite, ordinary area sees only zero, and a fractional exponent gives a stable scale-aware measure.
+The experience begins with the everyday question of Norway's coastline, uses the Koch snowflake as an exact mathematical model, introduces Hausdorff dimension as the explanation for why the model behaves as it does, and then returns to the coastline question. The visitor should discover why ordinary length becomes infinite, ordinary area sees only zero, and a fractional exponent gives a stable scale-aware measure — and land on the conclusion that a coastline's length depends on the ruler used to measure it.
 
 ## Assignment fit
 
-- **One strong idea:** Hausdorff dimension identifies the critical exponent at which scale-based measurement stops exploding or vanishing.
+- **One strong idea, held in priority order:** the smaller the ruler, the longer the measured coastline becomes; a coastline therefore has no single length until scale and convention are specified; Hausdorff dimension explains why, for an exact fractal, this instability has a stable critical exponent.
 - **One mechanic:** vertical scrolling advances and reverses the Koch construction/zoom.
 - **One mathematical dataset:** deterministic Koch iterations and the exact covering sum `M_s(n) = N_n * epsilon_n^s`.
 - **Static/client-side:** all SVG generation and state changes occur in the browser; no API, backend, account, or secret.

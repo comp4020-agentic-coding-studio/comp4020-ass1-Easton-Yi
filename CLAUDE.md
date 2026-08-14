@@ -182,11 +182,41 @@ The repository starter contract and course checks take precedence.
 
 ### Concept contract (do not drift from this)
 
-The whole site carries one claim: **Hausdorff dimension is the critical
-exponent that makes scale-based measurement stable as the measuring scale
-shrinks.** Norway's coastline is the everyday question, the Koch snowflake is
-the exact model, Hausdorff dimension is the answer. One mechanic: native
-vertical scroll through reversible Koch construction/zoom states.
+The site's concept has three tiers, in a strict priority order — never let a
+lower tier read as the page's opening thesis:
+
+1. **Primary idea (what the page opens with):** the smaller the ruler, the
+   longer the measured coastline becomes.
+2. **Primary conclusion (what the page must leave the visitor with):** a
+   coastline has no single length until the measuring scale and convention
+   are specified.
+3. **Secondary mathematical explanation (support, never the opening
+   claim):** Hausdorff dimension does not give Norway one true length; for
+   an exact fractal such as the Koch curve, it describes how measurement
+   scales as the ruler shrinks.
+
+Norway's coastline is the everyday question, the Koch snowflake is the exact
+model, and Hausdorff dimension explains *why* the model behaves as it does —
+it is the explanation, never the thesis. One mechanic: native vertical
+scroll through reversible Koch construction/zoom states.
+
+Operational rules that follow from this hierarchy:
+
+- the visible interaction must demonstrate the ruler scale decreasing and
+  the measured length increasing — that pairing is the primary idea, and
+  it must read clearly before Hausdorff dimension is introduced;
+- Hausdorff dimension is explanatory support and must never be staged as
+  the page's opening thesis or its first claim;
+- never state or imply that Norway's coastline is literally infinite;
+- raw ASCII/code-style mathematics (bare `<pre>`-style text such as
+  `H^s_delta(F) = inf sum_i diam(U_i)^s`) is not acceptable in the deployed
+  UI — render mathematics as legible typography, not source-code-shaped
+  text;
+- every acceptance claim requires inspection at both marking viewports,
+  **1920×1080** and **390×844** (see "Marking viewports" below);
+- a claim of success requires `pnpm check` passing *and* direct visual
+  inspection — a green check alone is never sufficient (see "Verifying
+  claims" below).
 
 Explicitly excluded — never add these regardless of how the page looks once
 built: a fractal gallery, a horizontal carousel, a second
@@ -204,7 +234,8 @@ Every visual check happens at both **1920×1080** (desktop) and **390×844**
 ### Command required before accepting any change
 
 Run `pnpm check` (typecheck → build → oxlint → stylelint → vitest, including
-`spec/koch.test.ts`) and treat a non-zero exit as blocking. Never tell the
+`spec/koch.test.ts` and `spec/concept-contract.test.ts`) and treat a non-zero
+exit as blocking. Never tell the
 user something works because the code "should" work — an agent's claim of
 success is not accepted without this command actually passing, and for
 anything visual, without a real rendered screenshot or `agent-browser`
