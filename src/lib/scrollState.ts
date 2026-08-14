@@ -36,7 +36,3 @@ export function iterationForProgress(progress: number, maxIteration = MAX_ITERAT
   return clamp(Math.floor(clamp(progress, 0, 1) * buckets), 0, maxIteration);
 }
 
-/** maxRevealStage is monotonic: it only ever increases within a session. */
-export function nextMaxRevealStage(previousMax: number, candidateStage: number): number {
-  return Math.max(previousMax, candidateStage);
-}

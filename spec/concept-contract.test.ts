@@ -23,7 +23,11 @@ const SUPERSEDED_THESIS = /makes\s+(?:scale-based\s+)?measurement\s+stable/i;
 // The primary conclusion: a coastline has no single length until the
 // measuring scale and convention are specified. Matched loosely (concept,
 // not exact wording) so it survives future copy edits that keep the idea.
-const PRIMARY_CONCLUSION = /(no single|not a single|incomplete without).{0,80}scale.{0,40}convention/is;
+// The second alternative matches the visual-transition phrasing
+// (docs/Refine_Explanations.md §5) that replaced the original
+// scale/convention paragraph — same concept, different words.
+const PRIMARY_CONCLUSION =
+  /((no single|not a single|incomplete without).{0,80}scale.{0,40}convention)|(coastline.{0,80}length.{0,80}depends on which details count)/is;
 
 describe("concept contract", () => {
   it("does not stage the superseded thesis as the page's top-level heading", () => {

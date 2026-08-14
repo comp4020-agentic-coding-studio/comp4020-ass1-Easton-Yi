@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { MAX_ITERATION } from "../src/lib/koch.ts";
-import { computeProgress, iterationForProgress, nextMaxRevealStage } from "../src/lib/scrollState.ts";
+import { computeProgress, iterationForProgress } from "../src/lib/scrollState.ts";
 
 // Acceptance tests 3, 9, 10 from docs/PROJECT_BRIEF.md: forward scroll raises
-// data-iteration, reverse scroll lowers it while data-max-reveal-stage holds,
-// and resizing mid-interaction preserves the logical iteration.
+// data-iteration, reverse scroll lowers it and restores the matching
+// narrative stage (data-reveal-stage), and resizing mid-interaction preserves
+// the logical iteration.
 
 describe("computeProgress", () => {
   const base = { sectionTop: 1000, sectionHeight: 4000, viewportHeight: 800 };
@@ -64,17 +65,5 @@ describe("iterationForProgress", () => {
     const after = iterationForProgress(computeProgress({ ...base, viewportHeight: 700, scrollY }));
     expect(before).toBeGreaterThanOrEqual(3);
     expect(after).toBe(before);
-  });
-});
-
-describe("nextMaxRevealStage", () => {
-  it("only ever increases, even if the candidate stage drops (reverse scroll)", () => {
-    let max = 0;
-    max = nextMaxRevealStage(max, 2);
-    expect(max).toBe(2);
-    max = nextMaxRevealStage(max, 1); // scrolled backward
-    expect(max).toBe(2);
-    max = nextMaxRevealStage(max, 4);
-    expect(max).toBe(4);
   });
 });

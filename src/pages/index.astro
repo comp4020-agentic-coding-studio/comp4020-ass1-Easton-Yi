@@ -1,41 +1,25 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { NORWAY_LAND_PATH, NORWAY_COASTLINE_PATH, NORWAY_VIEWBOX } from "../lib/norway.ts";
-import { renderMath } from "../lib/math.ts";
+import { generateKochPoints, kochPathD, MAX_ITERATION } from "../lib/koch.ts";
 
-// Formulas for #resolution-scene, staged in the order the concept contract
-// requires (CLAUDE.md): the primary-idea formula first, the Koch numeric
-// result only after the general scaling argument, the construction-aligned
-// covering sum last, and the full formal Hausdorff definition inside the
-// collapsed <details>. Rendered server-side to static HTML/MathML at build
-// time — no client-side KaTeX runtime ships to the page.
-const lengthFormula = renderMath(String.raw`L(\varepsilon) = N(\varepsilon)\,\varepsilon`);
-const scalingFormula = renderMath(String.raw`N(\varepsilon) \propto \varepsilon^{-D}`);
-const derivedFormula = renderMath(String.raw`L(\varepsilon) \propto \varepsilon^{1-D}`);
-const emphasisFormula = renderMath(
-  String.raw`\varepsilon\downarrow \;\Rightarrow\; L(\varepsilon)\uparrow`,
-);
-const kochResultFormula = renderMath(String.raw`D = \dfrac{\log 4}{\log 3} \approx 1.262`);
-const coveringSumFormula = renderMath(
-  String.raw`M_s(\varepsilon) = N(\varepsilon)\,\varepsilon^{s}`,
-);
-const hausdorffMeasureFormula = renderMath(
-  String.raw`H^s_\delta(F) = \inf \sum_i \operatorname{diam}(U_i)^s`,
-);
-const hausdorffDimensionFormula = renderMath(
-  String.raw`\dim_H(F) = \inf\{\, s : H^s(F) = 0 \,\}`,
-);
+// Finest Koch iteration, computed once at build time (it never changes at
+// runtime) — the static faint reference outline behind the bright,
+// currently-measured outline. See CLAUDE.md "Global correction of the ruler
+// misunderstanding": faint = finer detail that exists in the reference,
+// bright = the detail retained by the current measurement.
+const referencePathD = kochPathD(generateKochPoints(MAX_ITERATION));
 
 // Visual-refinement increment (docs/PROJECT_BRIEF.md, step 5): colour system,
 // Norway silhouette, arc divider, and the postscript's coastline echo /
 // disappearing readout (docs/EPILOGUE.md). Tide effect is an explicit
 // stretch goal in the brief and is not implemented here.
 const revealCopy = [
-  "Every segment becomes four. Each new segment is one third as long.",
-  "Measure it as a line: the total grows by 4/3 at every step.",
-  "Measure the boundary as area: the total shrinks toward zero.",
-  "Between length and area is one exponent that stays stable.",
-  "That exponent is the curve's Hausdorff dimension.",
+  "Smaller details are ignored.",
+  "Keep more detail.",
+  "The measured boundary gets longer.",
+  "For this curve, new detail never ends.",
+  "So its ordinary length never settles.",
 ];
 ---
 
@@ -77,11 +61,17 @@ const revealCopy = [
       id="koch-scene"
       class="koch-scene"
       data-iteration="0"
-      data-max-reveal-stage="0"
+      data-reveal-stage="0"
     >
       <div class="koch-sticky">
         <div class="koch-geometry">
-          <h1>Meet the Koch snowflake.</h1>
+          <div class="koch-titleblock">
+            <div class="koch-header">
+              <h1>Meet the Koch snowflake.</h1>
+              <p class="koch-intro-detail">It looks like a simple six-pointed star, however&hellip;</p>
+            </div>
+            <p class="koch-intro-line">It is actually an infinitely iterating shape!</p>
+          </div>
           <div class="koch-visual">
             <svg
               class="koch-svg"
@@ -90,6 +80,12 @@ const revealCopy = [
               aria-label="Koch snowflake construction, current iteration"
             >
               <g class="koch-wrapper" id="koch-wrapper">
+                <path
+                  id="koch-path-reference"
+                  d={referencePathD}
+                  vector-effect="non-scaling-stroke"
+                  aria-hidden="true"
+                />
                 <path id="koch-path" vector-effect="non-scaling-stroke" />
               </g>
             </svg>
@@ -103,7 +99,7 @@ const revealCopy = [
           </div>
           <dl class="koch-readout" id="koch-readout">
             <div class="koch-readout-scale">
-              <dt>Ruler (&epsilon;)</dt>
+              <dt>Smallest detail counted</dt>
               <dd id="stat-scale">1.000000</dd>
             </div>
             <div class="koch-readout-arrow" aria-hidden="true">&rarr;</div>
@@ -112,10 +108,11 @@ const revealCopy = [
               <dd id="stat-m1">3.0000</dd>
             </div>
           </dl>
+          <p class="koch-readout-caption">Details below this size are ignored.</p>
         </div>
         <div class="koch-copy">
           <ol class="reveal-list" id="reveal-list">
-            {revealCopy.map((text, i) => <li data-stage={i + 1}>{text}</li>)}
+            {revealCopy.map((text, i) => <li data-stage={i}>{text}</li>)}
           </ol>
           <dl class="instrumentation" id="instrumentation">
             <div>
@@ -126,74 +123,57 @@ const revealCopy = [
               <dt>Segments</dt>
               <dd id="stat-segments">3</dd>
             </div>
-            <div>
-              <dt>Critical measure</dt>
-              <dd id="stat-md">3.0000</dd>
-            </div>
-            <div>
-              <dt>2D measure of the boundary</dt>
-              <dd id="stat-m2">3.000000</dd>
-            </div>
           </dl>
         </div>
       </div>
     </section>
     <section id="resolution-scene" class="resolution-scene" aria-label="Resolution">
       <p class="resolution-line" data-stage="1">
-        Length says infinity. Area says zero. Dimension tells us which measure
-        fits.
+        This growth of detail is described by dimension.
       </p>
-      <div class="resolution-formula" data-stage="2" set:html={lengthFormula} />
-      <p class="resolution-formula-gloss" data-stage="2">
-        Cover the boundary with N(&epsilon;) steps of length &epsilon;;
-        multiply to get the measured length.
+      <div
+        class="dimension-scale"
+        data-stage="2"
+        aria-label="Dimension scale from a line to a plane, marked at the Koch boundary's dimension of 1.26"
+      >
+        <div class="dimension-track">
+          <span class="dimension-tick" style="left: 0%">
+            <span class="dimension-tick-value">1</span>
+            <span class="dimension-tick-label">line</span>
+          </span>
+          <span class="dimension-tick dimension-tick-marker" style="left: 26.186%">
+            <span class="dimension-tick-value">1.26</span>
+            <span class="dimension-tick-label">Koch boundary</span>
+          </span>
+          <span class="dimension-tick" style="left: 100%">
+            <span class="dimension-tick-value">2</span>
+            <span class="dimension-tick-label">plane</span>
+          </span>
+        </div>
+        <p class="dimension-marker-label">Hausdorff dimension: 1.26</p>
+      </div>
+      <div class="crossfade-container" data-stage="3" aria-hidden="true">
+        <svg class="crossfade-koch" viewBox="-1.1 -1.1 2.2 2.2">
+          <path d={referencePathD} vector-effect="non-scaling-stroke" />
+        </svg>
+        <svg
+          class="crossfade-norway"
+          viewBox={NORWAY_VIEWBOX}
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <path class="norway-land" d={NORWAY_LAND_PATH} />
+          <path class="norway-coastline" d={NORWAY_COASTLINE_PATH} />
+        </svg>
+      </div>
+      <p class="resolution-line" data-stage="4">Norway is not a perfect fractal.</p>
+      <p class="resolution-line" data-stage="5">
+        But every coastline length depends on which details count.
       </p>
-      <div class="resolution-formula" data-stage="3" set:html={scalingFormula} />
-      <p class="resolution-formula-gloss" data-stage="3">
-        The number of steps needed grows as the ruler shrinks, at a rate set
-        by the exponent D.
+      <p class="resolution-final" data-stage="6">
+        What we choose to ignore
+        <br />
+        is part of the answer.
       </p>
-      <div class="resolution-formula" data-stage="4" set:html={derivedFormula} />
-      <p class="resolution-formula-gloss" data-stage="4">
-        Substituting shows why: when D is greater than 1, shrinking the ruler
-        makes the measured length diverge.
-      </p>
-      <div class="resolution-emphasis" data-stage="5" set:html={emphasisFormula} />
-      <p class="resolution-formula-gloss" data-stage="5">
-        Smaller ruler, longer coastline &mdash; whenever D is greater than 1.
-      </p>
-      <p class="resolution-line" data-stage="6">
-        Below D, the scale-weighted measure explodes. Above D, it vanishes. D
-        is the critical exponent between a line (1) and a plane (2).
-      </p>
-      <div class="resolution-formula" data-stage="7" set:html={kochResultFormula} />
-      <p class="resolution-formula-gloss" data-stage="7">
-        For the Koch curve specifically: each step produces 4 copies at 1/3
-        scale, fixing this exponent.
-      </p>
-      <div class="resolution-formula" data-stage="8" set:html={coveringSumFormula} />
-      <p class="resolution-formula-gloss" data-stage="8">
-        This is the construction-aligned covering sum used above &mdash; not
-        the full formal Hausdorff measure. It describes the total size of an
-        &epsilon;-scale cover of the boundary, not the area of the filled
-        snowflake.
-      </p>
-      <details class="resolution-detail" data-stage="9">
-        <summary>Formal definition</summary>
-        <div set:html={hausdorffMeasureFormula} />
-        <div set:html={hausdorffDimensionFormula} />
-        <p>
-          Cover the set with pieces no larger than delta, choose the cheapest
-          such cover, then let delta shrink. The critical exponent is its
-          Hausdorff dimension.
-        </p>
-      </details>
-      <p class="resolution-line" data-stage="10">
-        Norway is not a perfect mathematical fractal. But the same
-        measurement problem returns: a smaller step follows more detail, so a
-        coastline length is incomplete without its scale and convention.
-      </p>
-      <p class="resolution-final" data-stage="11">The ruler is part of the answer.</p>
     </section>
     <section id="postscript-scene" class="postscript-scene" aria-label="Postscript">
       <svg
@@ -214,11 +194,11 @@ const revealCopy = [
         <br />
         to make a complex world legible.
       </p>
-      <p class="postscript-line" data-stage="2">But every ruler leaves something out.</p>
+      <p class="postscript-line" data-stage="2">But every measurement leaves something out.</p>
       <p class="postscript-final" data-stage="3">
         The world does not run out of detail
         <br />
-        when our ruler does.
+        where our measurement stops.
       </p>
       <a href="#intro-scene" id="measure-again" class="measure-again">Measure again</a>
       <p class="map-credit">Made with Natural Earth.</p>

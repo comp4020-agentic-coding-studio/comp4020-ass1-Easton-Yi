@@ -231,6 +231,26 @@ appears. All visitor-facing text is English.
 Every visual check happens at both **1920×1080** (desktop) and **390×844**
 (phone). Both count in full — a broken phone layout is not a partial pass.
 
+### Explainer scope discipline
+
+- The deployed experience is an interactive explainer, not a mathematical
+  lecture.
+- If a concept requires a paragraph to understand, first improve the visual
+  explanation.
+- No visitor-facing paragraph in the main interaction may exceed
+  approximately 12 words.
+- Do not show formal mathematical definitions in the deployed primary path.
+- Do not add collapsed "extra theory" panels merely to preserve mathematical
+  completeness.
+- Mathematical proofs and formal definitions belong in CONTENT_SOURCES.md,
+  tests, code comments, and crit preparation.
+- The deployed page may show at most one mathematical result after the
+  interaction: Hausdorff dimension ≈ 1.26.
+- Hausdorff dimension must emerge from the observed scaling behaviour; it
+  must not interrupt the experience as a separate lesson.
+- The visual transition must carry the visitor from Koch back to Norway
+  without an unrelated text-only lecture scene.
+
 ### Command required before accepting any change
 
 Run `pnpm check` (typecheck → build → oxlint → stylelint → vitest, including

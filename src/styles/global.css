@@ -254,10 +254,8 @@ a {
 }
 
 .resolution-line,
-.resolution-formula,
-.resolution-formula-gloss,
-.resolution-emphasis,
-.resolution-detail {
+.dimension-scale,
+.crossfade-container {
   max-width: var(--measure);
   margin: 0;
   opacity: 0;
@@ -266,10 +264,8 @@ a {
 }
 
 .resolution-line.revealed,
-.resolution-formula.revealed,
-.resolution-formula-gloss.revealed,
-.resolution-emphasis.revealed,
-.resolution-detail.revealed {
+.dimension-scale.revealed,
+.crossfade-container.revealed {
   opacity: 1;
   transform: translateY(0);
 }
@@ -279,58 +275,123 @@ a {
   line-height: var(--line-body);
 }
 
-.resolution-formula {
+/* The one mathematical result the deployed page keeps (CLAUDE.md "Explainer
+   scope discipline"): a plain graphical scale from line (1) to plane (2),
+   marked at the Koch boundary's dimension — no formula, no derivation. */
+.dimension-scale {
   width: 100%;
-  overflow-x: auto;
-  background: rgb(49 126 162 / 12%);
-  color: var(--fjord-deep);
-  border-radius: 0.5rem;
-  padding: var(--space-3) var(--space-4);
 }
 
-.resolution-formula .katex {
-  font-size: clamp(1rem, 1.4vw + 0.7rem, 1.2rem);
+.dimension-track {
+  position: relative;
+  height: 0.2rem;
+  border-radius: 999px;
+  background: rgb(49 126 162 / 25%);
+  margin: var(--space-7) 0;
 }
 
-.resolution-formula-gloss {
-  font-size: 0.9rem;
-  line-height: var(--line-body);
-  color: rgb(from var(--ink) r g b / 75%);
+.dimension-tick {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.resolution-emphasis {
-  width: 100%;
-  text-align: center;
-  color: var(--fjord-deep);
+.dimension-tick::before {
+  content: "";
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--fjord-deep);
+}
+
+.dimension-tick-value {
+  order: -1;
   font-weight: 700;
-  font-size: clamp(1.3rem, 2.5vw + 0.7rem, 1.9rem);
-}
-
-.resolution-emphasis .katex {
-  font-size: inherit;
-}
-
-.resolution-detail {
-  font-size: 0.9rem;
-}
-
-.resolution-detail summary {
-  cursor: pointer;
-  text-align: center;
-}
-
-.resolution-detail div {
-  background: rgb(49 126 162 / 12%);
   color: var(--fjord-deep);
-  border-radius: 0.5rem;
-  padding: var(--space-3) var(--space-4);
-  margin: var(--space-3) 0;
-  overflow-x: auto;
+}
+
+.dimension-tick-label {
+  font-size: 0.75rem;
+  color: rgb(from var(--ink) r g b / 70%);
+  white-space: nowrap;
+}
+
+.dimension-tick-marker::before {
+  width: 0.9rem;
+  height: 0.9rem;
+  box-shadow: 0 0 0 4px rgb(49 126 162 / 20%);
+}
+
+.dimension-marker-label {
+  margin: var(--space-3) 0 0;
+  text-align: center;
+  font-weight: 700;
+  color: var(--fjord-deep);
+}
+
+/* The visual Koch-to-Norway transition (docs/Refine_Explanations.md §5): the
+   faint/bright Koch outline crossfades into the Norway coastline in place,
+   revealed once by the same one-shot IntersectionObserver as every other
+   [data-stage] element (src/scripts/resolution.ts) — no new script. */
+.crossfade-container {
+  position: relative;
+  width: min(60vw, 16rem);
+  aspect-ratio: 1;
+}
+
+.crossfade-koch,
+.crossfade-norway {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  transition: opacity 0.6s ease;
+}
+
+.crossfade-koch {
+  stroke: var(--fjord-deep);
+  stroke-width: 1.5px;
+  stroke-linejoin: round;
+  opacity: 1;
+}
+
+/* Fades immediately alongside the container's own reveal (no held pause on
+   a fully-visible Koch outline first) so the whole dissolve reads as one
+   quick, continuous event even when the visitor is scrolling past fast —
+   previously the extra hold + long delay made it look like the Koch shape
+   flashed in, then separately cut to Norway. */
+.crossfade-container.revealed .crossfade-koch {
+  opacity: 0;
+}
+
+.crossfade-norway {
+  opacity: 0;
+}
+
+.crossfade-norway .norway-land {
+  fill: none;
+}
+
+.crossfade-norway .norway-coastline {
+  fill: none;
+  stroke: var(--fjord-deep);
+  stroke-width: 2px;
+  vector-effect: non-scaling-stroke;
+}
+
+.crossfade-container.revealed .crossfade-norway {
+  opacity: 1;
+  transition-delay: 0.15s;
 }
 
 .resolution-final {
   max-width: var(--measure-wide);
-  margin: 0;
+  margin: var(--space-7) 0;
   text-align: center;
   font-size: var(--font-heading);
   line-height: var(--line-heading);
@@ -515,18 +576,47 @@ a {
    readouts/copy directly beneath, no nested scrolling); at >=60rem they sit
    side by side per the 58/42 split below. */
 .koch-geometry {
-  flex: 0 0 50%;
+  flex: 0 0 56%;
   min-height: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
 }
 
+/* Hugs its own content (align-self overrides the column's default stretch)
+   so it can be centred as a block while the title and the line below it
+   share one left edge inside it. */
+.koch-titleblock {
+  align-self: center;
+  max-width: 100%;
+}
+
+.koch-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem var(--space-3);
+}
+
 .koch-geometry h1 {
   margin: 0;
   font-size: clamp(1.15rem, 3vw + 0.6rem, 2rem);
   line-height: 1.2;
-  text-align: center;
+  text-align: left;
+}
+
+.koch-intro-line {
+  margin: 0;
+  text-align: left;
+  font-size: clamp(0.85rem, 1.6vw + 0.5rem, 1.05rem);
+  color: var(--foam);
+}
+
+.koch-intro-detail {
+  margin: 0;
+  text-align: left;
+  font-size: 0.75rem;
+  color: var(--mist);
 }
 
 .koch-visual {
@@ -555,8 +645,30 @@ a {
   --camera-zoom-max: 1.4;
 
   transform: scale(var(--camera-scale, 1));
-  transform-origin: center;
+
+  /* Chromium resolves `center` (50% 50%) against the SVG's default
+     view-box reference frame as if it starts at (0, 0), ignoring our
+     viewBox's -1.1/-1.1 origin offset — so "center" lands at (1.1, 1.1)
+     instead of the true centre. Pin it to the real coordinate-space
+     origin explicitly to scale symmetrically instead of clipping most of
+     the shape off one edge. */
+  transform-origin: 0 0;
   transition: transform 0.05s linear;
+}
+
+/* The faint/bright pair (CLAUDE.md "Global correction of the ruler
+   misunderstanding"): #koch-path-reference is the finest iteration, static
+   and never redrawn; #koch-path is the currently-measured outline drawn on
+   top. At coarse resolution the bright line visibly cuts across the faint
+   one's smaller bends; as iteration increases they converge. */
+#koch-path-reference {
+  stroke: var(--mist);
+  stroke-width: 0.75px;
+  opacity: 0.35;
+}
+
+#koch-path {
+  stroke: var(--foam);
 }
 
 /* Non-interactive magnified detail: reuses the same cached path data as the
@@ -651,6 +763,15 @@ a {
   font-weight: 700;
 }
 
+/* Always rendered, never gated behind a scroll stage — the definition must
+   not need to be inferred later (docs/Refine_Explanations.md, ruler audit). */
+.koch-readout-caption {
+  margin: 0;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--mist);
+}
+
 /* Never let the copy panel need its own scrollbar — it must fit the space
    it's given (docs/PROJECT_BRIEF.md: "no nested scrolling containers"). */
 .koch-copy {
@@ -681,6 +802,16 @@ a {
 
 .reveal-list li.revealed {
   opacity: 1;
+  transform: translateY(0);
+}
+
+/* Dims the stage immediately before or after the current one — a glance-back
+   (or glance-ahead, when scrolling up) so the transition doesn't feel like a
+   hard cut. Reveal is tied directly to scroll position (src/scripts/koch-
+   scene.ts), so scrolling back up restores earlier text instead of leaving
+   it stuck at whatever stage was last reached. */
+.reveal-list li.previous {
+  opacity: 0.4;
   transform: translateY(0);
 }
 
@@ -724,7 +855,7 @@ a {
   }
 
   .koch-geometry {
-    flex: 0 0 58%;
+    flex: 0 0 70%;
   }
 
   .koch-wrapper {
@@ -745,7 +876,7 @@ a {
   }
 
   .koch-copy {
-    flex: 0 0 42%;
+    flex: 0 0 30%;
     justify-content: center;
     gap: var(--space-4);
   }
@@ -782,10 +913,10 @@ a {
   .intro-line,
   .compass-button,
   .resolution-line,
-  .resolution-formula,
-  .resolution-formula-gloss,
-  .resolution-emphasis,
-  .resolution-detail,
+  .dimension-scale,
+  .crossfade-container,
+  .crossfade-koch,
+  .crossfade-norway,
   .postscript-line,
   .postscript-final,
   .postscript-readout {
@@ -793,7 +924,9 @@ a {
   }
 
   .postscript-line.revealed,
-  .postscript-final.revealed {
+  .postscript-final.revealed,
+  .crossfade-container.revealed .crossfade-koch,
+  .crossfade-container.revealed .crossfade-norway {
     transition-delay: 0s;
   }
 

@@ -7,11 +7,14 @@ import {
   generateKochPoints,
   getCoveringMeasure,
   getKochMetrics,
-  HAUSDORFF_DIMENSION,
   kochPathD,
   MAX_ITERATION,
 } from "../lib/koch.ts";
-import { computeProgress, iterationForProgress, nextMaxRevealStage } from "../lib/scrollState.ts";
+import { computeProgress, iterationForProgress } from "../lib/scrollState.ts";
+
+// Narrative stages (revealCopy in index.astro) are fewer than iterations —
+// clamp to the last stage once the construction keeps refining past it.
+const MAX_NARRATIVE_STAGE = 4;
 
 const scene = document.querySelector<HTMLElement>("#koch-scene");
 
@@ -26,8 +29,6 @@ if (scene) {
     segments: scene.querySelector<HTMLElement>("#stat-segments"),
     scale: scene.querySelector<HTMLElement>("#stat-scale"),
     m1: scene.querySelector<HTMLElement>("#stat-m1"),
-    md: scene.querySelector<HTMLElement>("#stat-md"),
-    m2: scene.querySelector<HTMLElement>("#stat-m2"),
   };
 
   // Generate/cache every path once (docs/PROJECT_BRIEF.md "Koch renderer") —
@@ -36,7 +37,7 @@ if (scene) {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   let currentIteration = -1;
-  let maxRevealStage = 0;
+  let revealStage = -1;
 
   function applyIteration(n: number): void {
     if (n === currentIteration) return;
@@ -46,25 +47,26 @@ if (scene) {
 
     const metrics = getKochMetrics(n);
     const m1 = getCoveringMeasure(n, 1);
-    const md = getCoveringMeasure(n, HAUSDORFF_DIMENSION);
-    const m2 = getCoveringMeasure(n, 2);
 
     scene!.dataset.iteration = String(n);
     if (stat.iteration) stat.iteration.textContent = String(n);
     if (stat.segments) stat.segments.textContent = String(metrics.segmentCount);
     if (stat.scale) stat.scale.textContent = metrics.coverScale.toFixed(6);
     if (stat.m1) stat.m1.textContent = m1.toFixed(4);
-    if (stat.md) stat.md.textContent = md.toFixed(4);
-    if (stat.m2) stat.m2.textContent = m2.toFixed(6);
   }
 
+  // Tracks the current scroll position directly (not monotonic) so scrolling
+  // back up restores the narrative text for that earlier stage, with the
+  // next stage dimmed as a "previous" glance-back — mirroring how iteration
+  // itself already reverses on scroll-up.
   function applyReveal(stage: number): void {
-    const next = nextMaxRevealStage(maxRevealStage, stage);
-    if (next === maxRevealStage) return;
-    maxRevealStage = next;
-    scene!.dataset.maxRevealStage = String(maxRevealStage);
+    if (stage === revealStage) return;
+    revealStage = stage;
+    scene!.dataset.revealStage = String(revealStage);
     for (const item of revealItems) {
-      if (Number(item.dataset.stage) <= maxRevealStage) item.classList.add("revealed");
+      const itemStage = Number(item.dataset.stage);
+      item.classList.toggle("revealed", itemStage === revealStage);
+      item.classList.toggle("previous", itemStage === revealStage - 1 || itemStage === revealStage + 1);
     }
   }
 
@@ -78,7 +80,7 @@ if (scene) {
     });
     const iteration = iterationForProgress(progress);
     applyIteration(iteration);
-    applyReveal(iteration);
+    applyReveal(Math.min(iteration, MAX_NARRATIVE_STAGE));
 
     if (wrapper) {
       // Zoom is capped responsively via --camera-zoom-max (set in CSS, ~1.4
