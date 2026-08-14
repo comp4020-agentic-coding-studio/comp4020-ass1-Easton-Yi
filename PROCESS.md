@@ -73,6 +73,70 @@ before moving on.
    licence problem
    ([`e8460ef`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass1-Easton-Yi/commit/e8460ef429ab9536f0c9e5a35857240674ea3c58)).
 
+5. **Re-verified the Norway asset against the actual source data, and caught
+   a real data-contamination bug in the process.** Entry 4 above describes
+   fetching Natural Earth's country polygons and running a from-scratch RDP
+   simplification; on review that asset's path did not actually trace the
+   real Natural Earth geometry closely enough to justify calling it derived
+   data, so it has now been replaced end to end with a verified pipeline: `npx
+   mapshaper` (no gdal/ogr2ogr available) loading
+   `ne_10m_admin_0_countries.shp` filtered to the single feature where
+   `ADMIN=="Norway"` (120 rings), then a bounding-box split into 96
+   mainland/coastal-island rings versus 24 distant-territory rings (1 Jan
+   Mayen, 22 Svalbard, 1 Bouvet Island) dropped so mainland Norway isn't
+   shrunk to fit them, reprojected with a custom Transverse Mercator
+   (`+proj=tmerc +lat_0=64 +lon_0=17 +k=0.9996`) chosen to proportion the
+   country's north-south extent correctly. Three simplification levels
+   (unsimplified, 15% and 3% Visvalingam) were exported to SVG and compared
+   both zoomed into the western fjords and at deployment scale/opacity, at
+   both 1920x1080 and 390x844. **The 3% candidate was rejected**: at the
+   fjord zoom it visibly flattens the western coast into a near-straight line
+   with generic triangular notches and drops most offshore island fragments,
+   which is exactly the "generic zigzag" failure mode the brief rules out.
+   The 15% candidate was indistinguishable from the unsimplified export at
+   both viewports while being roughly 1/6th the size, so it was selected for
+   the land fill.
+   For the brighter-western-coast / weaker-inland-border visual split, a
+   second Natural Earth layer (`ne_10m_coastline`, 1:10m) was added as a
+   separate stroke. The first attempt clipped it to Norway's plain lon/lat
+   bounding box, which silently pulled in a strip of Sweden's own coastline
+   that happens to fall inside the same rectangle — visible in a screenshot
+   as a bare line unattached to Norway's landmass. It was replaced with a
+   polygon clip against an 8km buffer around Norway's own simplified land
+   polygon, which keeps only Norway's coast and drops the contamination; the
+   fix was confirmed by re-screenshotting the full shape and the fjord zoom
+   with no stray geometry on the ocean side. Because coastline data contains
+   no inland borders by construction, Norway's land border with
+   Sweden/Finland/Russia ends up with no stroke at all — the weakest possible
+   treatment — while the fill alone still reads as the country's shape.
+   ([`9f8c841`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass1-Easton-Yi/commit/9f8c8416b479334ed601320537ffbdab567431c2)).
+
+6. **A green build and a passing scroll test still let the snowflake "camera"
+   clip itself.** After using the Koch scene, the reported problems were
+   concrete: the seed triangle read too small, title/shape/measurements felt
+   disconnected, and late iterations zoomed so far that only one clipped
+   boundary fragment remained on screen. `pnpm check` had no way to see any
+   of this --- `iterationForProgress`/`computeProgress` were (and still are)
+   fully tested and correct; the bug was purely geometric. I computed the
+   snowflake's actual bounding box per iteration (`generateKochPoints` in
+   `src/lib/koch.ts`): stable at `w=1.0, h=1.1547` for every iteration past
+   the first. The old camera scaled up to 2.6x inside a `viewBox` of size
+   2.4, so the visible window (`2.4/2.6=0.923`) was smaller than the shape's
+   own height --- it was clipping the pointed tips on every side by
+   construction, not by accident. The fix was sized from that number, not
+   guessed: a `2.2`-wide viewBox with zoom capped at 1.75x max
+   (`2.2/1.75=1.257`, a real margin over `1.1547`), read from a
+   `--camera-zoom-max` custom property so the cap can differ by breakpoint
+   without touching the scroll math in `src/lib/scrollState.ts`, which
+   stayed untouched throughout. Re-screenshotting at both marking viewports
+   after the fix caught a second-order problem the plan hadn't predicted:
+   `.koch-svg` had `height: 100%` inside a portrait-shaped flex box, which
+   letterboxed the (square) snowflake into a small strip and left the
+   "disconnected" feeling worse, not better; replacing it with
+   `aspect-ratio: 1` plus `max-height: 100%` let the shape actually fill its
+   pane
+   ([`0de8955`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass1-Easton-Yi/commit/0de89558786e58c4c676c89cfd1bb8828a27d99d)).
+
 ## Before you ship
 
 `pnpm check:evidence` verifies your citations resolve to real commits, that
