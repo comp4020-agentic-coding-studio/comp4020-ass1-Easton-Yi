@@ -1,7 +1,6 @@
-// Act 3 (docs/PROJECT_BRIEF.md): the resolution reveals once, monotonically,
-// as the visitor scrolls into it — no continuous scroll handler, matching the
-// guidance in docs/EPILOGUE.md for the same kind of static reveal.
-const section = document.querySelector<HTMLElement>("#resolution-scene");
+// Postscript coda (docs/EPILOGUE.md): reveals its three text beats once,
+// monotonically, the same way the resolution does — no new scroll handler.
+const section = document.querySelector<HTMLElement>("#postscript-scene");
 
 if (section) {
   const items = Array.from(section.querySelectorAll<HTMLElement>("[data-stage]"));
@@ -22,6 +21,17 @@ if (section) {
     );
     for (const item of items) observer.observe(item);
   }
+
+  const again = section.querySelector<HTMLAnchorElement>("#measure-again");
+  const introScene = document.querySelector<HTMLElement>("#intro-scene");
+  again?.addEventListener("click", (event) => {
+    if (!introScene) return;
+    event.preventDefault();
+    introScene.scrollIntoView({
+      behavior: reduceMotion.matches ? "auto" : "smooth",
+      block: "start",
+    });
+  });
 }
 
 export {};

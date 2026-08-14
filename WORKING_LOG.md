@@ -156,3 +156,38 @@ the brief exists (see `docs/PROJECT_BRIEF.md` "Development sequence").
     coastline? — a Hausdorff dimension explainer"); the single `<h1>`
     invariant still holds (`Meet the Koch snowflake.` is the only `h1`, on
     the Koch scene, per `spec/invariants.test.ts`).
+- Built the postscript coda from `docs/EPILOGUE.md`, now that the
+  resolution above it is verified. Added `src/scripts/postscript.ts` and a
+  `#postscript-scene` section after `#resolution-scene`, using the exact
+  approved English copy (the three text beats, the "A postscript" label, no
+  extra paragraph after the final line). Reveal is the same
+  `IntersectionObserver`-once pattern as the resolution (monotonic, no new
+  continuous scroll handler), immediate under reduced motion. Added a quiet
+  `Measure again` link that scrolls back to `#intro-scene` (not a second
+  call to action — plain small text, matches the brief's "only if the
+  existing navigation pattern already supports it").
+  - Deliberately not implemented: the coda's own "keep the coastline
+    visible, fade the ruler/readout first" choreography. That requires the
+    Norway silhouette and a literal ruler/readout visual, neither of which
+    exists yet (visual system is step 5, not built). Implemented the coda
+    as the same plain, text-only treatment as the resolution instead;
+    revisit this choreography specifically once the visual system exists.
+  - Found and fixed a real bug via `pnpm check` itself (not just visual
+    inspection this time): `astro check` failed with "Cannot redeclare
+    block-scoped variable 'section'" once two scripts (`resolution.ts`,
+    `postscript.ts`) both declared a top-level `const section` with no
+    imports/exports. TypeScript treats a file with no `import`/`export` as
+    a global script rather than a module, so their top-level declarations
+    collided in the same global scope even though they're separate
+    `<script src>` tags. Fixed by adding `export {}` to the end of both
+    files, which makes each a proper ES module with its own scope — the
+    same fix will be needed for any future no-import script file.
+  - Verified with Playwright at both marking viewports: postscript stages
+    are unrevealed on load, all three reveal on scroll-to-bottom, stay
+    revealed after scrolling up and back down (monotonic), reduced motion
+    reveals everything immediately without any scroll, `Measure again`
+    scrolls back to the intro section, no horizontal overflow, no console
+    errors.
+  - `pnpm check` green: 35 tests across 4 files (same as the previous
+    increment — no new pure-function logic was added, just DOM reveal
+    wiring already covered by the resolution's pattern).

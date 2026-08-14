@@ -1,12 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-// Narrative-shell increment (docs/PROJECT_BRIEF.md, Act 1 + Act 3): adds the
-// intro question/compass and the mathematical resolution around the existing
-// Act 2 scroll interaction. No colour system, arc transition, veil, or tide
-// effect yet, and no postscript coda (docs/EPILOGUE.md) — that's gated on
-// this resolution being verified first, per the brief's development
-// sequence.
+// Narrative-shell increment (docs/PROJECT_BRIEF.md, Act 1 + Act 3) plus the
+// postscript coda (docs/EPILOGUE.md). Still no colour system, arc
+// transition, veil, or tide effect, and no Norway silhouette/ruler-readout
+// choreography — those need the visual system (step 5) that doesn't exist
+// yet, so the coda here is the same plain, text-only treatment as the
+// resolution above it.
 const revealCopy = [
   "Every segment becomes four. Each new segment is one third as long.",
   "Measure it as a line: the total grows by 4/3 at every step.",
@@ -117,8 +117,24 @@ dim_H(F) = inf &#123; s : H^s(F) = 0 &#125;</pre>
       </p>
       <p class="resolution-final" data-stage="7">The ruler is part of the answer.</p>
     </section>
+    <section id="postscript-scene" class="postscript-scene" aria-label="Postscript">
+      <p class="postscript-label">A postscript</p>
+      <p class="postscript-line" data-stage="1">
+        We use simple measures
+        <br />
+        to make a complex world legible.
+      </p>
+      <p class="postscript-line" data-stage="2">But every ruler leaves something out.</p>
+      <p class="postscript-final" data-stage="3">
+        The world does not run out of detail
+        <br />
+        when our ruler does.
+      </p>
+      <a href="#intro-scene" id="measure-again" class="measure-again">Measure again</a>
+    </section>
   </main>
   <script src="../scripts/intro.ts"></script>
   <script src="../scripts/koch-scene.ts"></script>
   <script src="../scripts/resolution.ts"></script>
+  <script src="../scripts/postscript.ts"></script>
 </Layout>

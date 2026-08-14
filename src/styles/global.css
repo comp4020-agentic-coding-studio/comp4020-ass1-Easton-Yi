@@ -147,6 +147,65 @@ a {
   font-weight: 700;
 }
 
+/* Postscript coda (docs/EPILOGUE.md) — same plain treatment as Act 3; no
+   Norway silhouette / disappearing-ruler choreography yet (visual system,
+   step 5, doesn't exist yet). */
+
+.postscript-scene {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 3rem 1.25rem;
+  text-align: center;
+}
+
+.postscript-label {
+  margin: 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #555;
+}
+
+.postscript-line,
+.postscript-final {
+  max-width: 32rem;
+  margin: 0;
+  opacity: 0;
+  transform: translateY(0.5rem);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  line-height: 1.5;
+}
+
+.postscript-line.revealed,
+.postscript-final.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.postscript-line {
+  font-size: clamp(1rem, 1.5vw + 0.7rem, 1.3rem);
+}
+
+.postscript-final {
+  font-size: clamp(1.2rem, 2vw + 0.8rem, 1.6rem);
+  font-weight: 700;
+}
+
+.measure-again {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.measure-again:focus-visible {
+  outline: 3px solid #0b5fff;
+  outline-offset: 2px;
+}
+
 /* Act 2 — core interaction (no colour system / veils / tide yet). */
 
 .koch-scene {
@@ -316,7 +375,9 @@ a {
   .compass-button,
   .resolution-line,
   .resolution-formula,
-  .resolution-detail {
+  .resolution-detail,
+  .postscript-line,
+  .postscript-final {
     transition: none;
   }
 }
