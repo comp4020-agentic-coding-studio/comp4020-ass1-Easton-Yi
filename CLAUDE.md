@@ -177,3 +177,60 @@ Final check for the repo according this project text requirments/specification, 
 
 Do not invent facts, events, user experiences or agent corrections.
 The repository starter contract and course checks take precedence.
+
+## Assignment 1 prototype: operational rules
+
+### Concept contract (do not drift from this)
+
+The whole site carries one claim: **Hausdorff dimension is the critical
+exponent that makes scale-based measurement stable as the measuring scale
+shrinks.** Norway's coastline is the everyday question, the Koch snowflake is
+the exact model, Hausdorff dimension is the answer. One mechanic: native
+vertical scroll through reversible Koch construction/zoom states.
+
+Explicitly excluded — never add these regardless of how the page looks once
+built: a fractal gallery, a horizontal carousel, a second
+coastline-measurement simulator, a 3D Menger sponge, a Mandelbrot explorer,
+extra user-facing parameter controls, or a claim that Norway's coastline is
+literally infinite. `M_s(n) = N_n * epsilon_n^s` is the construction-aligned
+covering sum, not the full formal Hausdorff measure — always say so when it
+appears. All visitor-facing text is English.
+
+### Marking viewports
+
+Every visual check happens at both **1920×1080** (desktop) and **390×844**
+(phone). Both count in full — a broken phone layout is not a partial pass.
+
+### Command required before accepting any change
+
+Run `pnpm check` (typecheck → build → oxlint → stylelint → vitest, including
+`spec/koch.test.ts`) and treat a non-zero exit as blocking. Never tell the
+user something works because the code "should" work — an agent's claim of
+success is not accepted without this command actually passing, and for
+anything visual, without a real rendered screenshot or `agent-browser`
+inspection at both marking viewports (see below).
+
+### Non-negotiable behavioural requirements
+
+- Keyboard-only scrolling (PageDown, Space, arrow keys) must reach and drive
+  every state; there is no mouse-only path.
+- Resizing mid-interaction must preserve the logical `currentIteration`, not
+  just the visual camera position.
+- `prefers-reduced-motion: reduce` must remove camera/divider/tide motion but
+  keep every discrete state and all explanatory copy reachable.
+- No horizontal overflow at either marking viewport, ever — check
+  `document.documentElement.scrollWidth <= clientWidth` doesn't regress.
+- The production build must work from the GitHub Pages base path
+  (`/comp4020-ass1-Easton-Yi/`, set in `astro.config.ts`); never hardcode an
+  absolute `/`-rooted asset path.
+
+### Verifying claims
+
+Playwright's Chromium (`npx playwright install chromium`, no `--with-deps`
+needed here) is available for direct visual inspection when `agent-browser`
+isn't reachable: launch it, set the viewport, screenshot, and actually look at
+the image before saying a visual change works. A CSS value that looks
+plausible (e.g. a stroke-width meant for viewBox units alongside
+`vector-effect="non-scaling-stroke"`) can silently render invisible geometry
+that every automated check still passes — automated checks and visual
+inspection are complementary, not substitutes for each other.

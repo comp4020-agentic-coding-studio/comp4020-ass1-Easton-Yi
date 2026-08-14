@@ -1,20 +1,80 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
+// Core-interaction increment (docs/PROJECT_BRIEF.md, Act 2 only): native
+// scroll drives the Koch construction. No intro/compass/resolution act, no
+// colour system yet — those are later increments per the brief's
+// development sequence.
+const revealCopy = [
+  "Every segment becomes four. Each new segment is one third as long.",
+  "Measure it as a line: the total grows by 4/3 at every step.",
+  "Measure the boundary as area: the total shrinks toward zero.",
+  "Between length and area is one exponent that stays stable.",
+  "That exponent is the curve's Hausdorff dimension.",
+];
 ---
 
-<Layout title="COMP4020 prototype">
+<Layout title="Koch snowflake — scroll interaction (test view)">
   <header>
     <nav aria-label="Primary">
       <a href="./">Home</a>
     </nav>
   </header>
   <main>
-    <h1>COMP4020 prototype</h1>
-    <p data-testid="intro">
-      Replace this with your prototype. This week's brief is on the course
-      website; <code>spec/README.md</code> explains how the checks in this repo
-      relate to it.
-    </p>
+    <section
+      id="koch-scene"
+      class="koch-scene"
+      data-iteration="0"
+      data-max-reveal-stage="0"
+    >
+      <div class="koch-sticky">
+        <div class="koch-visual">
+          <svg
+            class="koch-svg"
+            viewBox="-1.2 -1.2 2.4 2.4"
+            role="img"
+            aria-label="Koch snowflake construction, current iteration"
+          >
+            <g class="koch-wrapper" id="koch-wrapper">
+              <path id="koch-path" vector-effect="non-scaling-stroke" />
+            </g>
+          </svg>
+          <p class="scroll-cue">Scroll to look closer.</p>
+        </div>
+        <div class="koch-copy">
+          <h1>Meet the Koch snowflake.</h1>
+          <ol class="reveal-list" id="reveal-list">
+            {revealCopy.map((text, i) => <li data-stage={i + 1}>{text}</li>)}
+          </ol>
+          <dl class="instrumentation" id="instrumentation">
+            <div>
+              <dt>Iteration</dt>
+              <dd id="stat-iteration">0</dd>
+            </div>
+            <div>
+              <dt>Segments</dt>
+              <dd id="stat-segments">3</dd>
+            </div>
+            <div>
+              <dt>Cover scale</dt>
+              <dd id="stat-scale">1.000000</dd>
+            </div>
+            <div>
+              <dt>1D measure</dt>
+              <dd id="stat-m1">3.0000</dd>
+            </div>
+            <div>
+              <dt>Critical measure</dt>
+              <dd id="stat-md">3.0000</dd>
+            </div>
+            <div>
+              <dt>2D measure of the boundary</dt>
+              <dd id="stat-m2">3.000000</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
   </main>
-  <script src="../scripts/main.ts"></script>
+  <script src="../scripts/koch-scene.ts"></script>
 </Layout>
