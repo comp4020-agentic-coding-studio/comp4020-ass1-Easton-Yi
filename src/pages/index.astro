@@ -1,6 +1,30 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { NORWAY_PATH, NORWAY_VIEWBOX } from "../lib/norway.ts";
+import { NORWAY_LAND_PATH, NORWAY_COASTLINE_PATH, NORWAY_VIEWBOX } from "../lib/norway.ts";
+import { renderMath } from "../lib/math.ts";
+
+// Formulas for #resolution-scene, staged in the order the concept contract
+// requires (CLAUDE.md): the primary-idea formula first, the Koch numeric
+// result only after the general scaling argument, the construction-aligned
+// covering sum last, and the full formal Hausdorff definition inside the
+// collapsed <details>. Rendered server-side to static HTML/MathML at build
+// time — no client-side KaTeX runtime ships to the page.
+const lengthFormula = renderMath(String.raw`L(\varepsilon) = N(\varepsilon)\,\varepsilon`);
+const scalingFormula = renderMath(String.raw`N(\varepsilon) \propto \varepsilon^{-D}`);
+const derivedFormula = renderMath(String.raw`L(\varepsilon) \propto \varepsilon^{1-D}`);
+const emphasisFormula = renderMath(
+  String.raw`\varepsilon\downarrow \;\Rightarrow\; L(\varepsilon)\uparrow`,
+);
+const kochResultFormula = renderMath(String.raw`D = \dfrac{\log 4}{\log 3} \approx 1.262`);
+const coveringSumFormula = renderMath(
+  String.raw`M_s(\varepsilon) = N(\varepsilon)\,\varepsilon^{s}`,
+);
+const hausdorffMeasureFormula = renderMath(
+  String.raw`H^s_\delta(F) = \inf \sum_i \operatorname{diam}(U_i)^s`,
+);
+const hausdorffDimensionFormula = renderMath(
+  String.raw`\dim_H(F) = \inf\{\, s : H^s(F) = 0 \,\}`,
+);
 
 // Visual-refinement increment (docs/PROJECT_BRIEF.md, step 5): colour system,
 // Norway silhouette, arc divider, and the postscript's coastline echo /
@@ -16,20 +40,19 @@ const revealCopy = [
 ---
 
 <Layout title="How long is Norway's coastline? — a Hausdorff dimension explainer">
-  <header>
-    <nav aria-label="Primary">
-      <a href="./">Home</a>
-    </nav>
-  </header>
   <main>
     <section id="intro-scene" class="intro-scene" aria-label="Introduction">
+      <nav class="home-nav" aria-label="Primary">
+        <a href="./">Home</a>
+      </nav>
       <svg
         class="intro-silhouette"
         viewBox={NORWAY_VIEWBOX}
         preserveAspectRatio="xMidYMid slice"
         aria-hidden="true"
       >
-        <path d={NORWAY_PATH} />
+        <path class="norway-land" d={NORWAY_LAND_PATH} />
+        <path class="norway-coastline" d={NORWAY_COASTLINE_PATH} />
       </svg>
       <div class="intro-voile" aria-hidden="true"></div>
       <div class="intro-copy">
@@ -109,29 +132,57 @@ const revealCopy = [
         Length says infinity. Area says zero. Dimension tells us which measure
         fits.
       </p>
-      <pre class="resolution-formula" data-stage="2">M_s(epsilon) = N(epsilon) * epsilon^s</pre>
-      <pre class="resolution-formula" data-stage="3">4 copies, each scaled to 1/3
-D = log(4) / log(3) &#8776; 1.262</pre>
-      <p class="resolution-line" data-stage="4">
+      <div class="resolution-formula" data-stage="2" set:html={lengthFormula} />
+      <p class="resolution-formula-gloss" data-stage="2">
+        Cover the boundary with N(&epsilon;) steps of length &epsilon;;
+        multiply to get the measured length.
+      </p>
+      <div class="resolution-formula" data-stage="3" set:html={scalingFormula} />
+      <p class="resolution-formula-gloss" data-stage="3">
+        The number of steps needed grows as the ruler shrinks, at a rate set
+        by the exponent D.
+      </p>
+      <div class="resolution-formula" data-stage="4" set:html={derivedFormula} />
+      <p class="resolution-formula-gloss" data-stage="4">
+        Substituting shows why: when D is greater than 1, shrinking the ruler
+        makes the measured length diverge.
+      </p>
+      <div class="resolution-emphasis" data-stage="5" set:html={emphasisFormula} />
+      <p class="resolution-formula-gloss" data-stage="5">
+        Smaller ruler, longer coastline &mdash; whenever D is greater than 1.
+      </p>
+      <p class="resolution-line" data-stage="6">
         Below D, the scale-weighted measure explodes. Above D, it vanishes. D
         is the critical exponent between a line (1) and a plane (2).
       </p>
-      <details class="resolution-detail" data-stage="5">
+      <div class="resolution-formula" data-stage="7" set:html={kochResultFormula} />
+      <p class="resolution-formula-gloss" data-stage="7">
+        For the Koch curve specifically: each step produces 4 copies at 1/3
+        scale, fixing this exponent.
+      </p>
+      <div class="resolution-formula" data-stage="8" set:html={coveringSumFormula} />
+      <p class="resolution-formula-gloss" data-stage="8">
+        This is the construction-aligned covering sum used above &mdash; not
+        the full formal Hausdorff measure. It describes the total size of an
+        &epsilon;-scale cover of the boundary, not the area of the filled
+        snowflake.
+      </p>
+      <details class="resolution-detail" data-stage="9">
         <summary>Formal definition</summary>
-        <pre>H^s_delta(F) = inf sum_i diam(U_i)^s
-dim_H(F) = inf &#123; s : H^s(F) = 0 &#125;</pre>
+        <div set:html={hausdorffMeasureFormula} />
+        <div set:html={hausdorffDimensionFormula} />
         <p>
           Cover the set with pieces no larger than delta, choose the cheapest
           such cover, then let delta shrink. The critical exponent is its
           Hausdorff dimension.
         </p>
       </details>
-      <p class="resolution-line" data-stage="6">
+      <p class="resolution-line" data-stage="10">
         Norway is not a perfect mathematical fractal. But the same
         measurement problem returns: a smaller step follows more detail, so a
         coastline length is incomplete without its scale and convention.
       </p>
-      <p class="resolution-final" data-stage="7">The ruler is part of the answer.</p>
+      <p class="resolution-final" data-stage="11">The ruler is part of the answer.</p>
     </section>
     <section id="postscript-scene" class="postscript-scene" aria-label="Postscript">
       <svg
@@ -140,7 +191,8 @@ dim_H(F) = inf &#123; s : H^s(F) = 0 &#125;</pre>
         preserveAspectRatio="xMidYMid meet"
         aria-hidden="true"
       >
-        <path d={NORWAY_PATH} />
+        <path class="norway-land" d={NORWAY_LAND_PATH} />
+        <path class="norway-coastline" d={NORWAY_COASTLINE_PATH} />
       </svg>
       <p class="postscript-readout" id="postscript-readout" aria-hidden="true">
         Iteration 5 &middot; D &#8776; 1.262
@@ -158,6 +210,7 @@ dim_H(F) = inf &#123; s : H^s(F) = 0 &#125;</pre>
         when our ruler does.
       </p>
       <a href="#intro-scene" id="measure-again" class="measure-again">Measure again</a>
+      <p class="map-credit">Made with Natural Earth.</p>
     </section>
   </main>
   <script src="../scripts/intro.ts"></script>
