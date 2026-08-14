@@ -1,83 +1,80 @@
 # Process overview
 
-<!-- TEMPLATE: this file is a shape to fill in, not a form. Replace everything
-     in it with your own overview, and delete this comment — `pnpm
-     check:evidence` will remind you if it's still here. -->
-
 A reading-guide to how the work came together --- a map to your process, not an
-essay about it. Markers read this file and follow its citations; they don't
-trawl the repo for evidence you didn't point at, so if a moment mattered, cite
-it.
-
-This file is the shape; the course site's
-[assessment page](https://comp.anu.edu.au/courses/comp4020-agentic-coding-studio/topics/assessment/#what-you-submit)
-is the requirement, and each brief adds its own word count and moment count.
+essay about it.
 
 ## What I built
 
-One paragraph: the thing, and the idea behind it.
+A single-page explainer that carries one claim: Hausdorff dimension is the
+critical exponent that makes scale-based measurement stable as the measuring
+scale shrinks. Norway's coastline is the hook, the Koch snowflake is the exact
+model worked out in full, and the whole thing is driven by one mechanic ---
+native vertical scroll through a reversible construction/zoom sequence, framed
+by an intro (the Norway question), a resolution (the answer, worked out), and
+a postscript coda. It was built in the increments `docs/PROJECT_BRIEF.md` lays
+out: math vertical slice, core scroll interaction, narrative shell, postscript
+coda, then visual refinement (colour system, Norway silhouette, staged
+fields), each one checked with `pnpm check` and a real rendered screenshot
+before moving on.
 
 ## The moments that mattered
 
-Three or four for an assignment; fewer is fine for a weekly prototype. Keep the
-list short so each moment has room to do all four jobs:
+1. **A green build hid an invisible drawing.** The first Koch renderer built
+   cleanly and passed every check, but a screenshot at both marking viewports
+   showed six empty boxes where the snowflake outlines should have been. The
+   cause was `stroke-width: 0.003` written for the SVG's `viewBox` units,
+   combined with `vector-effect="non-scaling-stroke"` on the path --- which
+   makes stroke width a screen-pixel value, so the line was rendering at
+   ~0.003px. Nothing in `tsc`, the build, lint, or the 27 passing vitest cases
+   could have caught this, because none of them look at a pixel. What told me
+   it was actually fixed was re-screenshotting at both viewports and seeing
+   the triangle-to-snowflake progression appear; I then wrote the rule into
+   `CLAUDE.md` rather than just fixing the one line, since Act 2's larger
+   sticky renderer would hit the same trap
+   ([`e1718b3`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass1-Easton-Yi/commit/e1718b38930cb7f7940aed1607ae9fa9753f04b3)).
 
-1. **what happened** --- the problem, or the thing the agent got wrong
-2. **what you did instead of the obvious thing** --- the call you made, and why
-   it beat the obvious one
-3. **how you knew it was right** --- the check you ran, the viewport you looked
-   at, what you read before accepting the diff
-4. **the citation** --- a commit or commit range, a `CLAUDE.md` change, a check
-   that went from red to green, a prompt paired with the commit it produced
+2. **A CSS "safety net" was quietly breaking the one thing the page does.**
+   After fixing a nested-scroll bug in the Koch panel, the whole scene
+   started screenshotting blank at both viewports. Comparing
+   `getBoundingClientRect()` for the scene versus its sticky panel showed the
+   sticky element had stopped pinning at all. The cause was
+   `html, body { overflow-x: hidden; }`: per the CSS overflow spec, setting
+   only one axis away from `visible` forces the other axis to compute as
+   `auto`, which turned `body` into its own scroll container and broke
+   `position: sticky`'s containing block. Instead of patching around it, I
+   removed the rule entirely and re-verified "no horizontal overflow" the way
+   the brief actually asks for it --- checking `scrollWidth` against
+   `clientWidth` directly --- rather than leaning on a CSS property whose side
+   effect had just broken the core interaction
+   ([`e1718b3`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass1-Easton-Yi/commit/e1718b38930cb7f7940aed1607ae9fa9753f04b3)).
 
-Jobs 2 and 3 are the ones the repo can't tell a reader on its own, so they're
-where the marks are. The strongest moments are the ones where a correction
-landed in the **harness** rather than in another prompt --- a rule added to
-`CLAUDE.md`, a check wired up, an attempt thrown away: re-prompting until it
-passes is the routine case, and changing what the agent works against is the
-skilled one.
+3. **`astro check` caught a class of bug before it shipped.** Adding the
+   postscript coda's script alongside the resolution's produced "Cannot
+   redeclare block-scoped variable 'section'" even though the two files never
+   import each other. A file with no `import`/`export` is treated as a global
+   script rather than an ES module, so both files' top-level `const section`
+   collided in one shared scope despite being separate `<script src>` tags.
+   Adding `export {}` to both files fixed it by giving each its own module
+   scope. This mattered beyond the one fix: I flagged it as a durable pattern
+   in the working log so the same trap wouldn't reappear the next time a
+   no-import script file got added --- which it didn't, in the visual
+   refinement increment that followed
+   ([`b8db6e3`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass1-Easton-Yi/commit/b8db6e3ec160b3a2be4d6d958220587bc676cff8)).
 
-Cite each moment as a link whose text is the commit hash or range and whose
-target is this repo's commit or compare URL, so a reader clicks straight to the
-evidence:
-
-- one commit: [`a1b2c3d`](https://github.com/YOUR-ORG/YOUR-REPO/commit/a1b2c3d)
-- a range:
-  [`a1b2c3d...e4f5a6b`](https://github.com/YOUR-ORG/YOUR-REPO/compare/a1b2c3d...e4f5a6b)
-
-To pair a prompt with the commit it produced, quote the prompt (curated, not a
-full transcript) next to the citation:
-
-> the prompt, verbatim
-
-Screenshots are welcome where one carries the verification better than a
-sentence does. Commit the file to this repo and link it with a **relative**
-path, which is what makes it render on GitHub: `![alt text](docs/before.png)`.
-Images don't count towards the word count and don't replace the citation.
-
-### A worked moment, for shape
-
-Delete this section along with the rest of the boilerplate --- it's here to show
-the four jobs in one paragraph, not to be imitated in content.
-
-> The date formatter kept coming back with `toLocaleDateString()` and no locale
-> argument, so the same build rendered differently on my machine and in CI. I'd
-> already re-prompted it twice, which fixed the line but not the habit, so the
-> third time I put the rule in `CLAUDE.md` instead
-> ([`3f9ac21`](https://github.com/YOUR-ORG/YOUR-REPO/commit/3f9ac21)) and added
-> a spec test that fails on a bare `toLocaleDateString`. That's what told me it
-> had actually taken: the test went red against the old code and green against
-> the new, and the next two features it wrote passed it without prompting
-> ([`3f9ac21...b7e0d14`](https://github.com/YOUR-ORG/YOUR-REPO/compare/3f9ac21...b7e0d14)).
+4. **The easy data source was the wrong one.** For the Norway silhouette, the
+   fastest path was a ready-made `world-geojson` package. Before using it, I
+   checked its licence via the GitHub API and found it was GPL-3.0 ---
+   incompatible with the brief's requirement that map data be public domain.
+   Rather than use it and note the risk, I discarded it and fetched Natural
+   Earth's own 1:10m country data from its official mirror instead, then
+   wrote a Ramer-Douglas-Peucker simplification from scratch to bring
+   Norway's 7911-point mainland ring down to a usable 317-point SVG path.
+   Slower, but it's the only version of this asset I could ship without a
+   licence problem
+   ([`e8460ef`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass1-Easton-Yi/commit/e8460ef429ab9536f0c9e5a35857240674ea3c58)).
 
 ## Before you ship
 
-`pnpm check:evidence` verifies your citations resolve to real commits, that the
-current reflection entry is in `reflections/`, and that your `CLAUDE.md` is
-there --- before a marker ever opens the file. It checks that your map is
-traceable, not that it is good: the marker judges whether your small,
-deliberately chosen set of moments shows real judgement and reflection. A green
-check is not a substitute for that curation.
-
-Images are deliberately not checked, because whether one renders is visible the
-moment you look. Open this file on GitHub and look at it before you ship.
+`pnpm check:evidence` verifies your citations resolve to real commits, that
+the current reflection entry is in `reflections/`, and that your `CLAUDE.md`
+is there --- before a marker ever opens the file.
