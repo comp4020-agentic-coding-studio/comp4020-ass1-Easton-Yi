@@ -508,9 +508,30 @@ a {
   color: var(--foam);
 }
 
+/* .koch-geometry groups the title, the shape, and the ruler->length readout
+   into one visually connected block (title/snowflake/measurements used to
+   read as three unrelated pieces); .koch-copy holds the supporting
+   explanation and secondary stats. On mobile they stack (geometry upper,
+   readouts/copy directly beneath, no nested scrolling); at >=60rem they sit
+   side by side per the 58/42 split below. */
+.koch-geometry {
+  flex: 0 0 50%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.koch-geometry h1 {
+  margin: 0;
+  font-size: clamp(1.15rem, 3vw + 0.6rem, 2rem);
+  line-height: 1.2;
+  text-align: center;
+}
+
 .koch-visual {
   position: relative;
-  flex: 0 0 42%;
+  flex: 1 1 auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -520,8 +541,10 @@ a {
 
 .koch-svg {
   width: 100%;
-  height: 100%;
-  max-width: 32rem;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1;
   fill: none;
   stroke: var(--foam);
   stroke-width: 1.5px;
@@ -529,9 +552,37 @@ a {
 }
 
 .koch-wrapper {
+  --camera-zoom-max: 1.4;
+
   transform: scale(var(--camera-scale, 1));
   transform-origin: center;
   transition: transform 0.05s linear;
+}
+
+/* Non-interactive magnified detail: reuses the same cached path data as the
+   main shape (src/scripts/koch-scene.ts), just cropped to a small viewBox —
+   "zoomed" purely by framing, no second scroll/zoom mechanic. Desktop only;
+   see the >=60rem block below. */
+.koch-inset {
+  display: none;
+}
+
+.koch-inset-svg {
+  fill: none;
+  stroke: var(--foam);
+  stroke-width: 1.5px;
+  stroke-linejoin: round;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.koch-inset-label {
+  margin: var(--space-1) 0 0;
+  font-size: 0.7rem;
+  text-align: center;
+  color: var(--mist);
 }
 
 .scroll-cue {
@@ -542,6 +593,62 @@ a {
   margin: 0;
   font-size: 0.8rem;
   color: var(--mist);
+  transition: opacity 0.3s ease;
+}
+
+/* Hidden once the construction is fully built (iteration 5, MAX_ITERATION in
+   src/lib/koch.ts) — there is nothing left to scroll closer to. Driven by
+   the data-iteration attribute koch-scene.ts already sets; no script change
+   needed. */
+.koch-scene[data-iteration="5"] .scroll-cue {
+  opacity: 0;
+}
+
+/* The ruler -> measured length pair, pulled out of the secondary stat grid
+   and placed directly under the shape: this is the page's primary idea
+   (smaller ruler, longer length) shown where the geometry lives, bridging
+   shape and number instead of leaving them to read as separate blocks. */
+.koch-readout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin: 0;
+  padding-top: var(--space-2);
+  border-top: 1px solid rgb(247 251 252 / 30%);
+  font-variant-numeric: tabular-nums;
+}
+
+.koch-readout-scale,
+.koch-readout-length {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.koch-readout dt {
+  color: var(--mist);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.koch-readout dd {
+  margin: 0;
+  color: var(--foam);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.koch-readout-arrow {
+  font-size: 1.4rem;
+  color: var(--mist);
+}
+
+.koch-readout-length dd {
+  font-size: clamp(1.5rem, 2.5vw + 0.8rem, 2.1rem);
+  font-weight: 700;
 }
 
 /* Never let the copy panel need its own scrollbar — it must fit the space
@@ -553,12 +660,7 @@ a {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-}
-
-.koch-copy h1 {
-  margin: 0;
-  font-size: clamp(1.15rem, 3vw + 0.6rem, 2rem);
-  line-height: 1.2;
+  justify-content: center;
 }
 
 .reveal-list {
@@ -590,7 +692,7 @@ a {
   font-variant-numeric: tabular-nums;
   border-top: 1px solid rgb(247 251 252 / 30%);
   padding-top: var(--space-2);
-  margin: auto 0 0;
+  margin: 0;
 }
 
 .instrumentation > div {
@@ -609,6 +711,8 @@ a {
 
 .instrumentation dd {
   margin: 0;
+  color: var(--foam);
+  font-weight: 600;
 }
 
 @media (width >= 60rem) {
@@ -619,12 +723,29 @@ a {
     gap: var(--space-4);
   }
 
-  .koch-visual {
-    flex: 0 0 62%;
+  .koch-geometry {
+    flex: 0 0 58%;
+  }
+
+  .koch-wrapper {
+    --camera-zoom-max: 1.75;
+  }
+
+  .koch-inset {
+    display: block;
+    position: absolute;
+    right: var(--space-3);
+    bottom: var(--space-3);
+    width: 30%;
+    max-width: 11rem;
+    background: rgb(20 51 66 / 55%);
+    border: 1px solid rgb(247 251 252 / 25%);
+    border-radius: 0.5rem;
+    padding: var(--space-2);
   }
 
   .koch-copy {
-    flex: 0 0 36%;
+    flex: 0 0 42%;
     justify-content: center;
     gap: var(--space-4);
   }
@@ -651,6 +772,11 @@ a {
   .reveal-list li {
     transition: none;
     transform: none;
+  }
+
+  .scroll-cue,
+  .koch-inset {
+    transition: none;
   }
 
   .intro-line,

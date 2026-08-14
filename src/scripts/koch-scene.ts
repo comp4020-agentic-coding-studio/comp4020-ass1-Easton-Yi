@@ -19,6 +19,7 @@ if (scene) {
   const sticky = scene.querySelector<HTMLElement>(".koch-sticky");
   const wrapper = scene.querySelector<SVGGElement>("#koch-wrapper");
   const path = scene.querySelector<SVGPathElement>("#koch-path");
+  const insetPath = scene.querySelector<SVGPathElement>("#koch-inset-path");
   const revealItems = Array.from(scene.querySelectorAll<HTMLElement>("[data-stage]"));
   const stat = {
     iteration: scene.querySelector<HTMLElement>("#stat-iteration"),
@@ -41,6 +42,7 @@ if (scene) {
     if (n === currentIteration) return;
     currentIteration = n;
     if (path) path.setAttribute("d", pathCache[n]);
+    if (insetPath) insetPath.setAttribute("d", pathCache[n]);
 
     const metrics = getKochMetrics(n);
     const m1 = getCoveringMeasure(n, 1);
@@ -79,7 +81,11 @@ if (scene) {
     applyReveal(iteration);
 
     if (wrapper) {
-      const scale = reduceMotion.matches ? 1 : 1 + progress * 1.6;
+      // Zoom is capped responsively via --camera-zoom-max (set in CSS, ~1.4
+      // on mobile / ~1.75 on desktop) so the full snowflake bounding box
+      // never exceeds the SVG viewBox and gets clipped to a fragment.
+      const zoomMax = Number(getComputedStyle(wrapper).getPropertyValue("--camera-zoom-max")) || 1.4;
+      const scale = reduceMotion.matches ? 1 : 1 + progress * (zoomMax - 1);
       wrapper.style.setProperty("--camera-scale", String(scale));
     }
 
