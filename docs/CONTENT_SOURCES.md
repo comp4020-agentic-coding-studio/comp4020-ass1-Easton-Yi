@@ -192,11 +192,18 @@ Homepage: https://www.naturalearthdata.com/
 1:10m country polygons: https://www.naturalearthdata.com/downloads/10m-cultural-vectors/  
 Terms: https://www.naturalearthdata.com/about/terms-of-use/
 
-Natural Earth vector and raster data are public domain. Derive the Norway silhouette from the 1:10m country/coastline data, simplify it for the viewport, export as SVG, and optimise the path. Recommended attribution even though not required:
+Natural Earth vector and raster data are public domain. Recommended attribution even though not required:
 
 ```text
 Made with Natural Earth.
 ```
+
+**Applied.** The Norway silhouette (`src/lib/norway.ts`) is derived from
+`ne_10m_admin_0_countries` (land fill, Norway selected by its `ADMIN`
+attribute) and `ne_10m_coastline` (coastline stroke), both 1:10m, reprojected
+and simplified with mapshaper. The attribution text above appears verbatim on
+the deployed page in the postscript scene (`.map-credit`). See `PROCESS.md`
+for the extraction/simplification working log.
 
 Do not use the reference screenshot as an asset or trace its exact pixels. It may guide colour balance and silhouette placement only.
 
