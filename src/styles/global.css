@@ -229,6 +229,62 @@ a {
   box-shadow: 0 0 0 5px var(--foam);
 }
 
+/* The idea beat, between the intro question and the Koch scene: same field
+   colour as .koch-sticky's resting state so the transition into Act 2 reads
+   as one continuous space rather than a new page. Title and sentence occupy
+   the same grid cell so revealing one and hiding the other crossfades in
+   place, matching the crossfade-container pattern used later on the page. */
+
+.idea-scene {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6) var(--space-5);
+  text-align: center;
+  background: var(--fjord-deep);
+  color: var(--foam);
+}
+
+@supports (height: 100dvh) {
+  .idea-scene {
+    min-height: 100dvh;
+  }
+}
+
+.idea-copy {
+  display: grid;
+  place-items: center;
+  max-width: var(--measure-wide);
+}
+
+.idea-title,
+.idea-line {
+  grid-area: 1 / 1;
+  margin: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.idea-title.shown,
+.idea-line.shown {
+  opacity: 1;
+}
+
+.idea-title {
+  font-size: clamp(1.5rem, 1.4vw + 1.1rem, 2.25rem);
+  line-height: var(--line-heading);
+  font-weight: 600;
+}
+
+.idea-line {
+  font-size: var(--font-heading);
+  line-height: var(--line-heading);
+  font-weight: 700;
+}
+
 /* Act 3 — resolution: pale mist field, ink text, fjord-tinted formula
    blocks — the answer read in daylight after Act 2's dark construction.
    Only the final statement is centred; the explanatory build-up reads as a
@@ -396,6 +452,15 @@ a {
   font-size: var(--font-heading);
   line-height: var(--line-heading);
   font-weight: 700;
+}
+
+/* Defines the "ruler" metaphor used earlier on the idea page (see
+   spec/ruler-audit.test.ts) in a quiet aside, not as a second lesson. */
+.resolution-gloss {
+  margin: 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--fjord-deep);
 }
 
 /* Postscript coda (docs/EPILOGUE.md): same pale mist field as Act 3. A small
@@ -912,6 +977,8 @@ a {
 
   .intro-line,
   .compass-button,
+  .idea-title,
+  .idea-line,
   .resolution-line,
   .dimension-scale,
   .crossfade-container,
@@ -933,5 +1000,21 @@ a {
   .koch-sticky {
     /* No scroll-driven colour blend under reduced motion — a fixed field. */
     background: var(--fjord-deep);
+  }
+
+  .idea-title {
+    /* The label is a lead-in for the crossfade only; under reduced motion
+       both idea-line halves are shown at once, stacked, instead. */
+    display: none;
+  }
+
+  .idea-copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .idea-line {
+    opacity: 1;
   }
 }
