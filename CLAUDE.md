@@ -180,6 +180,10 @@ The repository starter contract and course checks take precedence.
 
 ## Assignment 1 prototype: operational rules
 
+### Direct orders 
+Direct orders in the prompt should be exacuted/achieved without further changes or redesign. 
+Direct orders include "change ... to ..." liked short imperatives.
+
 ### Concept contract (do not drift from this)
 
 The site's concept has three tiers, in a strict priority order — never let a
@@ -216,7 +220,12 @@ Operational rules that follow from this hierarchy:
   **1920×1080** and **390×844** (see "Marking viewports" below);
 - a claim of success requires `pnpm check` passing *and* direct visual
   inspection — a green check alone is never sufficient (see "Verifying
-  claims" below).
+  claims" below);
+- the word "ruler" may appear in deployed text, but only where the site also
+  ships a plain-language definition of it somewhere on the page (it does not
+  need to precede every use) — `spec/ruler-audit.test.ts` enforces this. An
+  unexplained "ruler" was the original problem this correction fixed, not
+  the word itself.
 
 Explicitly excluded — never add these regardless of how the page looks once
 built: a fractal gallery, a horizontal carousel, a second
