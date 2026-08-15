@@ -340,10 +340,24 @@ a {
    bold first line folded into the following paragraph, so each reads as a
    short beat of its own before the explanation underneath it. */
 .resolution-label {
-  font-size: var(--font-body);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: calc(var(--font-body) * 1.5);
   line-height: var(--line-body);
   font-weight: 700;
   color: var(--fjord-deep);
+}
+
+/* Small same-colour marker so a standalone label reads as its own beat,
+   not just bold text mixed into the paragraph flow. */
+.resolution-label::before {
+  content: "";
+  flex: none;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  background: currentcolor;
 }
 
 /* Extra breathing room between a standalone label and the paragraph that
@@ -403,7 +417,7 @@ a {
   position: relative;
   height: 0.2rem;
   border-radius: 999px;
-  background: rgb(49 126 162 / 25%);
+  background: rgb(from var(--ink) r g b / 25%);
   margin: var(--space-7) 0;
 }
 
@@ -422,13 +436,13 @@ a {
   width: 0.6rem;
   height: 0.6rem;
   border-radius: 50%;
-  background: var(--fjord-deep);
+  background: var(--ink);
 }
 
 .dimension-tick-value {
   order: -1;
   font-weight: 700;
-  color: var(--fjord-deep);
+  color: var(--ink);
 }
 
 .dimension-tick-label {
@@ -440,14 +454,15 @@ a {
 .dimension-tick-marker::before {
   width: 0.9rem;
   height: 0.9rem;
-  box-shadow: 0 0 0 4px rgb(49 126 162 / 20%);
+  background: var(--ink);
+  box-shadow: 0 0 0 4px rgb(from var(--ink) r g b / 20%);
 }
 
 .dimension-marker-label {
   margin: var(--space-3) 0 0;
   text-align: center;
   font-weight: 700;
-  color: var(--fjord-deep);
+  color: var(--ink);
 }
 
 /* The visual Koch-to-Norway transition (docs/Refine_Explanations.md §5): the
@@ -456,21 +471,17 @@ a {
    [data-stage] element (src/scripts/resolution.ts) — no new script. */
 .crossfade-container {
   position: relative;
-  width: min(60vw, 16rem);
-  aspect-ratio: 1;
+  width: min(90vw, 36rem);
+  max-width: min(90vw, 36rem);
 }
 
-.crossfade-koch,
-.crossfade-norway {
+.crossfade-koch {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   fill: none;
   transition: opacity 0.6s ease;
-}
-
-.crossfade-koch {
   stroke: var(--fjord-deep);
   stroke-width: 1.5px;
   stroke-linejoin: round;
@@ -486,8 +497,51 @@ a {
   opacity: 0;
 }
 
+/* Norway alongside Britain's island, in the same row, for a real second
+   coastline to compare against — each rendered at the same size Norway used
+   to fill this figure alone, and wrapping to its own row rather than
+   shrinking below that size if the viewport is too narrow for both. */
+.crossfade-countries {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--space-4);
+}
+
+.country-figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  width: min(60vw, 16rem);
+}
+
+.country-figure-britain {
+  z-index: 1;
+}
+
+.country-figure-norway {
+  z-index: 2;
+}
+
+.country-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgb(from var(--ink) r g b / 70%);
+  white-space: nowrap;
+}
+
 .crossfade-norway {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  fill: none;
   opacity: 0;
+  transition: opacity 0.6s ease;
 }
 
 .crossfade-norway .norway-land {
@@ -496,7 +550,7 @@ a {
 
 .crossfade-norway .norway-coastline {
   fill: none;
-  stroke: var(--fjord-deep);
+  stroke: var(--ink);
   stroke-width: 2px;
   vector-effect: non-scaling-stroke;
 }
@@ -504,6 +558,11 @@ a {
 .crossfade-container.revealed .crossfade-norway {
   opacity: 1;
   transition-delay: 0.15s;
+}
+
+.figure-highlight {
+  color: var(--ink);
+  font-weight: 700;
 }
 
 .resolution-final {

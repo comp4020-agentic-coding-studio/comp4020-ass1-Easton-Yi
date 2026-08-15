@@ -205,6 +205,17 @@ and simplified with mapshaper. The attribution text above appears verbatim on
 the deployed page in the postscript scene (`.map-credit`). See `PROCESS.md`
 for the extraction/simplification working log.
 
+**Applied.** The Great Britain comparison silhouette (`src/lib/britain.ts`) is
+derived from `ne_10m_admin_0_countries`, filtered to the United Kingdom
+feature by its `ADMIN` attribute and reduced to the single largest ring by
+area (the Great Britain mainland outline; Northern Ireland and outlying
+islands are separate, smaller rings and are excluded — this is a comparison
+silhouette next to Norway's, not a full UK atlas). Reprojected with a
+Britain-centred Transverse Mercator and simplified with mapshaper's
+Visvalingam algorithm at 15%, chosen the same way as Norway's own land layer:
+compared against an unsimplified export before selection. Shown alongside
+Norway's coastline in the resolution scene (`data-stage="10"`).
+
 Do not use the reference screenshot as an asset or trace its exact pixels. It may guide colour balance and silhouette placement only.
 
 ## Interaction and accessibility sources

@@ -2,10 +2,10 @@
 // scrolling past it always works, so this script only handles the optional
 // staged reveal and the compass shortcut, never scroll-jacking.
 const scene = document.querySelector<HTMLElement>("#intro-scene");
-const kochScene = document.querySelector<HTMLElement>("#koch-scene");
+const ideaScene = document.querySelector<HTMLElement>("#idea-scene");
 const compass = document.querySelector<HTMLButtonElement>("#compass-button");
 
-if (scene && kochScene && compass) {
+if (scene && ideaScene && compass) {
   const lines = Array.from(scene.querySelectorAll<HTMLElement>(".intro-line"));
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -38,18 +38,18 @@ if (scene && kochScene && compass) {
     complete();
   });
 
-  function goToAct2(): void {
-    kochScene!.scrollIntoView({
+  function goToIdea(): void {
+    ideaScene!.scrollIntoView({
       behavior: reduceMotion.matches ? "auto" : "smooth",
       block: "start",
     });
-    const heading = kochScene!.querySelector<HTMLElement>("h1");
-    if (heading) {
-      heading.setAttribute("tabindex", "-1");
-      heading.focus();
+    const title = ideaScene!.querySelector<HTMLElement>(".idea-title");
+    if (title) {
+      title.setAttribute("tabindex", "-1");
+      title.focus();
     }
   }
 
   // A native <button> already activates on both Enter and Space.
-  compass.addEventListener("click", goToAct2);
+  compass.addEventListener("click", goToIdea);
 }

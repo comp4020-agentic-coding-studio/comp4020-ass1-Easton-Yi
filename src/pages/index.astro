@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { NORWAY_LAND_PATH, NORWAY_COASTLINE_PATH, NORWAY_VIEWBOX } from "../lib/norway.ts";
+import { BRITAIN_COASTLINE_PATH, BRITAIN_VIEWBOX } from "../lib/britain.ts";
 import { generateKochPoints, kochPathD, MAX_ITERATION } from "../lib/koch.ts";
 import { generateHilbertPoints, hilbertPathD } from "../lib/hilbert.ts";
 
@@ -147,7 +148,7 @@ const revealCopy = [
       </p>
       <p class="resolution-line" data-stage="2">
         <strong>Fractual family.</strong><br>
-        It turns out that the costline and this curve are all fractal patterns. When
+        It turns out that the coastline and this curve are all fractal patterns. When
         zooming in, details on the edges emerge infinitely...
       </p>
       <div class="resolution-aside resolution-lead-gap" data-stage="3">
@@ -166,10 +167,11 @@ const revealCopy = [
         </p>
       </div>
       <p class="resolution-label resolution-label-gap resolution-lead-gap" data-stage="4">
-        We observe the fracual property!
+        The tortuosity of fractuals!
       </p>
       <p class="resolution-line" data-stage="5">
-        Actually, the "Hausdorff dimension" tells how convoluted these fractal
+        <strong>How tortuous it is?</strong><br>
+        Actually, the "Hausdorff dimension" D tells how tortuous these fractal
         patterns are!
       </p>
       <p class="resolution-line" data-stage="6">
@@ -178,14 +180,14 @@ const revealCopy = [
       </p>
       <p class="resolution-line" data-stage="7">
         It measures how &lsquo;big&rsquo; the pattern is in terms of
-        complexity and space-filling ability. For the snowflake, this value is
+        complexity and space-filling ability. For the snowflake, this value is <i>D</i><sub><i>Koch</i></sub> =
         log<sub>3</sub>4 &asymp; 1.261. Closer to 2 meaning that a pattern is
         almost filling in the whole 2D plane!
       </p>
       <div
         class="dimension-scale"
         data-stage="8"
-        aria-label="Dimension scale from a line to a plane, marked at the Koch boundary's dimension of 1.26"
+        aria-label="Dimension scale from a line to a plane, marked at the Koch snowflake's dimension of 1.26"
       >
         <div class="dimension-track">
           <span class="dimension-tick" style="left: 0%">
@@ -194,37 +196,82 @@ const revealCopy = [
           </span>
           <span class="dimension-tick dimension-tick-marker" style="left: 26.186%">
             <span class="dimension-tick-value">1.26</span>
-            <span class="dimension-tick-label">Koch boundary</span>
+            <span class="dimension-tick-label">Koch snowflake</span>
           </span>
           <span class="dimension-tick" style="left: 100%">
             <span class="dimension-tick-value">2</span>
             <span class="dimension-tick-label">plane</span>
           </span>
         </div>
-        <p class="dimension-marker-label">Hausdorff dimension = 1.26</p>
       </div>
       <p class="resolution-line" data-stage="9">
-        For the famous Sierpinski triangle, this is 1.585, and for
-        those&hellip;
+        For the famous Sierpinski triangle, this is log<sub>2</sub>3 &asymp; 1.585, and for
+        those coastlines...
       </p>
       <div class="crossfade-container" data-stage="10" aria-hidden="true">
         <svg class="crossfade-koch" viewBox="-1.1 -1.1 2.2 2.2">
           <path d={referencePathD} vector-effect="non-scaling-stroke" />
         </svg>
-        <svg
-          class="crossfade-norway"
-          viewBox={NORWAY_VIEWBOX}
-          preserveAspectRatio="xMidYMid meet"
-        >
-          <path class="norway-land" d={NORWAY_LAND_PATH} />
-          <path class="norway-coastline" d={NORWAY_COASTLINE_PATH} />
-        </svg>
+        <div class="crossfade-countries">
+          <figure class="country-figure country-figure-britain">
+            <svg
+              class="crossfade-norway"
+              viewBox={BRITAIN_VIEWBOX}
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <path class="norway-coastline" d={BRITAIN_COASTLINE_PATH} />
+            </svg>
+            <figcaption class="country-label">Britain&rsquo;s island</figcaption>
+          </figure>
+          <figure class="country-figure country-figure-norway">
+            <svg
+              class="crossfade-norway"
+              viewBox={NORWAY_VIEWBOX}
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <path class="norway-land" d={NORWAY_LAND_PATH} />
+              <path class="norway-coastline" d={NORWAY_COASTLINE_PATH} />
+            </svg>
+            <figcaption class="country-label">Norway</figcaption>
+          </figure>
+        </div>
       </div>
-      <p class="resolution-line" data-stage="9">Norway is not a perfect fractal.</p>
-      <p class="resolution-line" data-stage="10">
-        But every coastline length depends on which details count.
+      <p class="resolution-label resolution-label-gap resolution-lead-gap" data-stage="11">
+        Coastlines are not perfect fractals, but have this dimension of complexity.
       </p>
-      <p class="resolution-final" data-stage="11">
+      <div
+        class="dimension-scale"
+        data-stage="12"
+        aria-label="Dimension scale from a line to a plane, marked at Britain's coastline dimension of 1.21 and Norway's coastline dimension of 1.52"
+      >
+        <div class="dimension-track">
+          <span class="dimension-tick" style="left: 0%">
+            <span class="dimension-tick-value">1</span>
+            <span class="dimension-tick-label">line</span>
+          </span>
+          <span class="dimension-tick dimension-tick-marker" style="left: 21%">
+            <span class="dimension-tick-value">1.21</span>
+            <span class="dimension-tick-label">Britain</span>
+          </span>
+          <span class="dimension-tick dimension-tick-marker" style="left: 52%">
+            <span class="dimension-tick-value">1.52</span>
+            <span class="dimension-tick-label">Norway!</span>
+          </span>
+          <span class="dimension-tick" style="left: 100%">
+            <span class="dimension-tick-value">2</span>
+            <span class="dimension-tick-label">plane</span>
+          </span>
+        </div>
+      </div>
+      <p class="resolution-line" data-stage="13">
+        <strong>Coastline tortuosity.</strong><br>
+        But there is a way to estimate coastline dimensions based on the formula <i>D</i> = 1 − log<sub><i>G</i></sub>(<i>L</i>/<i>M</i>). <span class="figure-highlight">For the Norway costline, this is a whopping 1.52 dimensions!</span>
+        (World's highest-dimensional coastline~)
+      </p>
+      <p class="resolution-line" data-stage="14">
+        Calculating every coastline length depends on which details count, especially for those
+      </p>
+      <p class="resolution-final" data-stage="15">
         What we choose to ignore
         <br />
         is part of the answer.
