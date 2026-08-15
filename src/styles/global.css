@@ -310,6 +310,8 @@ a {
 }
 
 .resolution-line,
+.resolution-label,
+.resolution-aside,
 .dimension-scale,
 .crossfade-container {
   max-width: var(--measure);
@@ -320,6 +322,8 @@ a {
 }
 
 .resolution-line.revealed,
+.resolution-label.revealed,
+.resolution-aside.revealed,
 .dimension-scale.revealed,
 .crossfade-container.revealed {
   opacity: 1;
@@ -329,6 +333,63 @@ a {
 .resolution-line {
   font-size: var(--font-body);
   line-height: var(--line-body);
+}
+
+/* Standalone lead-in beats ("Exactly the point and the rare thing!", "We
+   observe the fracual property!") — their own small section rather than a
+   bold first line folded into the following paragraph, so each reads as a
+   short beat of its own before the explanation underneath it. */
+.resolution-label {
+  font-size: var(--font-body);
+  line-height: var(--line-body);
+  font-weight: 700;
+  color: var(--fjord-deep);
+}
+
+/* Extra breathing room between a standalone label and the paragraph that
+   follows it, on top of the section's normal flex gap. */
+.resolution-label-gap {
+  margin-bottom: var(--space-5);
+}
+
+/* Widens the gap before this paragraph to 2.0x the section's normal
+   flex gap (var(--space-5)), for the Koch/Hilbert/Hausdorff lead-in beats
+   only — the rest of the section keeps the standard rhythm. */
+.resolution-lead-gap {
+  margin-top: calc(var(--space-5) * 2.0);
+}
+
+/* Wraps the "curves that nearly fill the plane" aside so a faint Hilbert
+   curve (a different fractal from the page's one worked Koch example) can
+   sit behind the text, illustrating "convoluted" without a second worked
+   example (docs/Refine_Explanations.md §6). */
+.resolution-aside {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) 0;
+}
+
+.resolution-aside-text {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: var(--font-body);
+  line-height: var(--line-body);
+}
+
+.hilbert-bg {
+  position: absolute;
+  inset: -2.5rem;
+  z-index: 0;
+  width: calc(100% + 4rem);
+  height: calc(100% + 4rem);
+  fill: none;
+  stroke: var(--fjord-deep);
+  stroke-width:3px;
+  opacity: 0.20;
+  pointer-events: none;
 }
 
 /* The one mathematical result the deployed page keeps (CLAUDE.md "Explainer
@@ -980,6 +1041,8 @@ a {
   .idea-title,
   .idea-line,
   .resolution-line,
+  .resolution-label,
+  .resolution-aside,
   .dimension-scale,
   .crossfade-container,
   .crossfade-koch,

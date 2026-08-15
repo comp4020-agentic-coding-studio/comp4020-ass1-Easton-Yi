@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import { NORWAY_LAND_PATH, NORWAY_COASTLINE_PATH, NORWAY_VIEWBOX } from "../lib/norway.ts";
 import { generateKochPoints, kochPathD, MAX_ITERATION } from "../lib/koch.ts";
+import { generateHilbertPoints, hilbertPathD } from "../lib/hilbert.ts";
 
 // Finest Koch iteration, computed once at build time (it never changes at
 // runtime) — the static faint reference outline behind the bright,
@@ -9,6 +10,12 @@ import { generateKochPoints, kochPathD, MAX_ITERATION } from "../lib/koch.ts";
 // misunderstanding": faint = finer detail that exists in the reference,
 // bright = the detail retained by the current measurement.
 const referencePathD = kochPathD(generateKochPoints(MAX_ITERATION));
+
+// Decorative background for the "curves that nearly fill the plane" aside
+// (docs/Refine_Explanations.md §6) — a faint, fixed-order Hilbert curve, not
+// a Koch iteration, so it visually distinguishes "other fractals exist" from
+// the page's one worked example.
+const hilbertBgPathD = hilbertPathD(generateHilbertPoints());
 
 // Visual-refinement increment (docs/PROJECT_BRIEF.md, step 5): colour system,
 // Norway silhouette, arc divider, and the postscript's coastline echo /
@@ -135,12 +142,49 @@ const revealCopy = [
       </div>
     </section>
     <section id="resolution-scene" class="resolution-scene" aria-label="Resolution">
-      <p class="resolution-line" data-stage="1">
-        This growth of detail is described by dimension.
+      <p class="resolution-label resolution-label-gap" data-stage="1">
+        Exactly the point and the rare thing!
+      </p>
+      <p class="resolution-line" data-stage="2">
+        <strong>Fractual family.</strong><br>
+        It turns out that the costline and this curve are all fractal patterns. When
+        zooming in, details on the edges emerge infinitely...
+      </p>
+      <div class="resolution-aside resolution-lead-gap" data-stage="3">
+        <svg
+          class="hilbert-bg"
+          viewBox="0 0 1 1"
+          preserveAspectRatio="xMidYMid meet"
+          aria-hidden="true"
+        >
+          <path d={hilbertBgPathD} vector-effect="non-scaling-stroke" />
+        </svg>
+        <p class="resolution-aside-text">
+          <strong>Even can fill in a plane ?!</strong><br>
+          In extreme senarios, a fractual curve can be infinitely zigzaged and almost
+          filling in the entire 2D area it occupies...
+        </p>
+      </div>
+      <p class="resolution-label resolution-label-gap resolution-lead-gap" data-stage="4">
+        We observe the fracual property!
+      </p>
+      <p class="resolution-line" data-stage="5">
+        Actually, the "Hausdorff dimension" tells how convoluted these fractal
+        patterns are!
+      </p>
+      <p class="resolution-line" data-stage="6">
+        If we zoomed in, each curve/unit is shrunk to 1/s, and is replaced with
+        N shrunk results, the Hausdorff dimension would be D = log<sub>s</sub>N.
+      </p>
+      <p class="resolution-line" data-stage="7">
+        It measures how &lsquo;big&rsquo; the pattern is in terms of
+        complexity and space-filling ability. For the snowflake, this value is
+        log<sub>3</sub>4 &asymp; 1.261. Closer to 2 meaning that a pattern is
+        almost filling in the whole 2D plane!
       </p>
       <div
         class="dimension-scale"
-        data-stage="2"
+        data-stage="8"
         aria-label="Dimension scale from a line to a plane, marked at the Koch boundary's dimension of 1.26"
       >
         <div class="dimension-track">
@@ -157,9 +201,13 @@ const revealCopy = [
             <span class="dimension-tick-label">plane</span>
           </span>
         </div>
-        <p class="dimension-marker-label">Hausdorff dimension: 1.26</p>
+        <p class="dimension-marker-label">Hausdorff dimension = 1.26</p>
       </div>
-      <div class="crossfade-container" data-stage="3" aria-hidden="true">
+      <p class="resolution-line" data-stage="9">
+        For the famous Sierpinski triangle, this is 1.585, and for
+        those&hellip;
+      </p>
+      <div class="crossfade-container" data-stage="10" aria-hidden="true">
         <svg class="crossfade-koch" viewBox="-1.1 -1.1 2.2 2.2">
           <path d={referencePathD} vector-effect="non-scaling-stroke" />
         </svg>
@@ -172,11 +220,11 @@ const revealCopy = [
           <path class="norway-coastline" d={NORWAY_COASTLINE_PATH} />
         </svg>
       </div>
-      <p class="resolution-line" data-stage="4">Norway is not a perfect fractal.</p>
-      <p class="resolution-line" data-stage="5">
+      <p class="resolution-line" data-stage="9">Norway is not a perfect fractal.</p>
+      <p class="resolution-line" data-stage="10">
         But every coastline length depends on which details count.
       </p>
-      <p class="resolution-final" data-stage="6">
+      <p class="resolution-final" data-stage="11">
         What we choose to ignore
         <br />
         is part of the answer.
