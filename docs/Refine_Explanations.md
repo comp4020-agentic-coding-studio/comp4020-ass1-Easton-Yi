@@ -1,3 +1,72 @@
+Status: superseded plan, kept for history. This file originally proposed
+stripping the resolution scene down to one visual dimension reveal with no
+formulas. That plan shipped for a while, then the user iterated further and
+explicitly reintroduced worked math and extra copy by direct request. What
+follows below the line describes the **current, achieved** design of
+`#resolution-scene` in `src/pages/index.astro`, not the original stripped-down
+plan — read this section, not the historical one further down, if you want to
+know what's actually deployed.
+
+This file is not used as a spec anymore. Do not re-apply §§2–4 below (the
+"remove all formulas" instructions) — they describe an earlier state the user
+has since moved past.
+
+## Current resolution-scene design (achieved)
+
+The scene runs as one continuous scroll-revealed sequence
+(`data-stage="1"` through `"13"`, `src/scripts/resolution.ts` reveals each
+once via `IntersectionObserver`, threshold 0.35, or all at once under
+`prefers-reduced-motion`):
+
+1. Label: "Exactly the point and the rare thing!"
+2. "Fractual family." — coastline and Koch curve are both fractal patterns;
+   detail keeps emerging on zoom.
+3. A faint, fixed order-4 Hilbert curve (`src/lib/hilbert.ts`) sits behind an
+   aside paragraph ("Even can fill in a plane ?!") as a visual example of a
+   different curve that nearly fills the plane — illustrative only, not a
+   second interactive fractal.
+4. Label: "We observe the fracual property!"
+5. "Actually, the 'Hausdorff dimension' tells how convoluted these fractal
+   patterns are!"
+6. General formula, in the visitor's own words: shrinking each unit to `1/s`
+   and replacing it with `N` shrunk copies gives dimension `D = log_s N`
+   (rendered with a real `<sub>`, not ASCII).
+7. The specific snowflake case: `log₃4 ≈ 1.261`, framed as "closer to 2" (a
+   plane) than 1 (a line).
+8. The line→plane dimension-scale graphic (ticks at 1, 1.26 "Koch boundary",
+   2), sitting between the snowflake figure and the Sierpinski aside — moved
+   here specifically so the visual scale reinforces the number just given
+   before the next fact arrives.
+9. "For the famous Sierpinski triangle, this is 1.585, and for those…" — a
+   second worked example, left trailing deliberately.
+10. Crossfade from the Koch outline into the Norway coastline.
+11. "Norway is not a perfect fractal."
+12. "But every coastline length depends on which details count."
+13. Final line: "What we choose to ignore / is part of the answer.", followed
+    by the standing ruler-definition gloss.
+
+This intentionally carries **three** mathematical figures (D = log_s N,
+log₃4 ≈ 1.261, and 1.585 for Sierpinski) rather than the single Hausdorff
+number the original plan called for, and several paragraphs run well past the
+~12-word guideline in CLAUDE.md's "Explainer scope discipline". Both are
+known, deliberate departures from that guideline, made by explicit user
+request rather than by drift — CLAUDE.md's "Direct orders" rule is what
+justified honoring them as given rather than compressing them back down.
+
+All wording in stages 6, 7, and 9 is the user's own, preserved verbatim
+per their standing instruction ("Use exactly the words I give you!") —
+only spelling (e.g. "shrinked"→"shrunk", "whould"→"would",
+"mesures"→"measures") and math notation (proper `<sub>` subscripts, `≈`
+instead of `=` for an approximation) were corrected, never phrasing.
+
+The ruler-terminology correction (below) is still fully in effect and
+unaffected by any of this — "ruler" still only needs one standing
+plain-language definition on the page, which the closing gloss provides.
+
+---
+
+## Historical plan (superseded, do not re-apply §§2–4)
+
 Simplify the deployed explainer by removing the mathematical lecture section and making the conclusion emerge directly from the visual interaction.
 
 The current resolution scene is too dense and disconnected. It contains multiple equations, explanatory paragraphs, a collapsed “Formal definition” control, a Norway disclaimer, and then a large concluding slogan. Although mathematically accurate, this structure feels like a textbook and interrupts the visual narrative.
