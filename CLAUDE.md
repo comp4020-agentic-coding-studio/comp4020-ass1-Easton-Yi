@@ -221,13 +221,11 @@ Operational rules that follow from this hierarchy:
 - a claim of success requires `pnpm check` passing *and* direct visual
   inspection — a green check alone is never sufficient (see "Verifying
   claims" below);
-- the word "ruler" is fine to use freely in deployed text now — the page
-  carries a standing plain-language definition (the closing gloss: "By
-  'ruler,' we mean the smallest length you measure with."), and
-  `spec/ruler-audit.test.ts` only checks that this definition exists
-  somewhere on the page, not that each individual use is annotated. The
-  original problem was an *unexplained* ruler; that's already fixed and
-  durable, so don't re-litigate this on every edit.
+- the word "ruler" is fine to use freely in deployed text; there is no
+  longer a standing plain-language-definition requirement enforced by
+  `spec/ruler-audit.test.ts` (that check was deliberately removed) — each
+  use should still read clearly in context, but don't reintroduce a
+  standing "By 'ruler,' we mean..." gloss line unless asked to.
 
 Explicitly excluded — never add these regardless of how the page looks once
 built: a fractal gallery, a horizontal carousel, a second

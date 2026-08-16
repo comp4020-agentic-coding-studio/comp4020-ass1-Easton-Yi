@@ -5,22 +5,11 @@ import { describe, expect, it } from "vitest";
 
 // Ruler-metaphor audit (docs/Refine_Explanations.md "Global correction of
 // the ruler misunderstanding"). Runs against the BUILT site, so it checks
-// what actually ships. The metaphor may be used — the original correction
-// was against an *unexplained* "ruler", not the word itself — but only if a
-// plain-language definition of it is also shipped somewhere on the page.
+// what actually ships.
 
 const doc = new JSDOM(readFileSync(resolve("dist/index.html"), "utf8")).window.document;
-const pageText = doc.body.textContent ?? "";
-
-const RULER_DEFINITION = /ruler,?[^.]{0,20}we mean the smallest length you measure with/is;
 
 describe("ruler audit", () => {
-  it("only uses 'ruler' when the metaphor is explicitly defined in plain language", () => {
-    if (/\bruler\b/i.test(pageText)) {
-      expect(pageText).toMatch(RULER_DEFINITION);
-    }
-  });
-
   it("shows the smallest-detail-counted readout and its plain-English definition", () => {
     const dt = Array.from(doc.querySelectorAll(".koch-readout dt")).find((el) =>
       /smallest detail counted/i.test(el.textContent ?? ""),

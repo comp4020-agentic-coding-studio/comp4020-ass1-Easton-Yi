@@ -420,7 +420,19 @@ a {
 }
 
 .journal-entry-text {
+  position: relative;
   display: block;
+  padding-left: 1.1em;
+}
+
+.journal-entry-text::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+}
+
+.journal-entry-text + .journal-entry-text {
+  margin-top: var(--space-3);
 }
 
 /* Wraps the "curves that nearly fill the plane" aside so a faint Hilbert
@@ -808,6 +820,7 @@ a {
   color: var(--fjord-deep);
   opacity: 0.6;
 }
+
 
 /* Act 2 — core interaction: dark fjord-deep field, foam strokes/text. The
    sticky panel blends toward Act 1's sky at its start and Act 3's mist at its
