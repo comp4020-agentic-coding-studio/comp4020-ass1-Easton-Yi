@@ -212,6 +212,24 @@ before moving on.
     both marking viewports, not from a rule computed in advance
     ([`0a65734`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass1-Easton-Yi/commit/0a65734684aefd484c7c0d9ceb8f340976118a7b)).
 
+11. **Caught a wording mismatch between the idea, the interaction, and the
+    closing line, and fixed all three to say the same thing.** The
+    resolution scene showed different rulers giving different lengths, but
+    the closing line still just said "Details we choose to ignore is part
+    of the answer" --- true, but it never named the cause. "Ruler" is the
+    word used everywhere else on the page; "details" and "granularity" are
+    the easier, unambiguous words a first-time reader reaches for. The line
+    was rewritten to state the cause and effect directly: "Details we
+    choose to ignore is determined by the ruler. This is part of the
+    answer." --- ruler chosen, details lost, that's the answer, in that
+    order. A small SVG ruler icon (a rounded rect body plus tick lines,
+    `.coastline-samples-note-ruler`) was added next to the resolution
+    scene's own note for the same reason: the word "ruler" now has a
+    literal picture sitting next to it, not just three abstract line
+    lengths, so the idea, the interaction, and the summary line all point
+    at the same object
+    ([`a2a4626`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass1-Easton-Yi/commit/a2a46269797b7736df87b0f1099d03b11d79b7c0)).
+
 ## Before you ship
 
 `pnpm check:evidence` verifies your citations resolve to real commits, that
