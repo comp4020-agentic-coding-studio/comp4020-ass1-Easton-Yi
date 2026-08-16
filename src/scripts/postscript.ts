@@ -1,9 +1,14 @@
-// Postscript coda (docs/EPILOGUE.md): reveals its three text beats once,
-// monotonically, the same way the resolution does — no new scroll handler.
+// Postscript coda (docs/EPILOGUE.md): the three text beats and the
+// dragon-curve background all reveal once, monotonically, the same way
+// the resolution does.
 const section = document.querySelector<HTMLElement>("#postscript-scene");
 
 if (section) {
-  const items = Array.from(section.querySelectorAll<HTMLElement>("[data-stage]"));
+  const items = Array.from(
+    section.querySelectorAll<HTMLElement>(
+      ".postscript-line[data-stage], .postscript-final[data-stage], .postscript-dragon-path[data-stage]",
+    ),
+  );
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   if (reduceMotion.matches || !("IntersectionObserver" in window)) {

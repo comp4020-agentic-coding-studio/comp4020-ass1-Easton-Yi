@@ -4,6 +4,7 @@ import { NORWAY_LAND_PATH, NORWAY_COASTLINE_PATH, NORWAY_VIEWBOX } from "../lib/
 import { BRITAIN_COASTLINE_PATH, BRITAIN_VIEWBOX } from "../lib/britain.ts";
 import { generateKochPoints, kochPathD, MAX_ITERATION } from "../lib/koch.ts";
 import { generateHilbertPoints, hilbertPathD } from "../lib/hilbert.ts";
+import { generateDragonPoints, dragonPathD, getDragonViewBox } from "../lib/dragon.ts";
 
 // Finest Koch iteration, computed once at build time (it never changes at
 // runtime) — the static faint reference outline behind the bright,
@@ -17,6 +18,17 @@ const referencePathD = kochPathD(generateKochPoints(MAX_ITERATION));
 // a Koch iteration, so it visually distinguishes "other fractals exist" from
 // the page's one worked example.
 const hilbertBgPathD = hilbertPathD(generateHilbertPoints());
+
+// Postscript background motif: a single dragon curve, revealed at increasing
+// order in step with the postscript's three text stages — replaces the
+// earlier small Norway-coastline echo. Fixed orders, no runtime controls.
+const DRAGON_ORDERS = [7, 9, 11];
+const dragonPointSets = DRAGON_ORDERS.map((order) => generateDragonPoints(order));
+const dragonViewBox = getDragonViewBox(dragonPointSets[dragonPointSets.length - 1]);
+const dragonStages = dragonPointSets.map((points, i) => ({
+  stage: i + 1,
+  d: dragonPathD(points),
+}));
 
 // Visual-refinement increment (docs/PROJECT_BRIEF.md, step 5): colour system,
 // Norway silhouette, arc divider, and the postscript's coastline echo /
@@ -147,7 +159,7 @@ const revealCopy = [
         Exactly the point and the rare thing!
       </p>
       <p class="resolution-line" data-stage="2">
-        <strong>Fractual family.</strong><br>
+        <strong>Fractal family.</strong><br>
         It turns out that the coastline and this curve are all fractal patterns. When
         zooming in, details on the edges emerge infinitely...
       </p>
@@ -162,12 +174,12 @@ const revealCopy = [
         </svg>
         <p class="resolution-aside-text">
           <strong>Even can fill in a plane ?!</strong><br>
-          In extreme senarios, a fractual curve can be infinitely zigzaged and almost
+          In extreme senarios, a fractal curve can be infinitely zigzaged and almost
           filling in the entire 2D area it occupies...
         </p>
       </div>
       <p class="resolution-label resolution-label-gap resolution-lead-gap" data-stage="4">
-        The tortuosity of fractuals!
+        The tortuosity of fractals!
       </p>
       <p class="resolution-line" data-stage="5">
         <strong>How tortuous it is?</strong><br>
@@ -298,24 +310,30 @@ const revealCopy = [
           For an ideal fractal boundary, this increase never settles—so a coastline has no single length until its scale and convention are fixed.
         </span>
         <span class="journal-entry-text">
-          Here, the &ldquo;ruler&rdquo; means the smallest detail your measurement keeps, not the scale of the map. The chosen resolution is part of the answer.
+          Here, the &ldquo;ruler&rdquo; means the smallest detail your measurement keeps, not the scale of the map. The granularity we choose is part of the answer.
         </span>
       </p>
       <p class="resolution-final" data-stage="15">
-        What we choose to ignore
+        Details we choose to ignore
         <br />
         is part of the answer.
       </p>
     </section>
     <section id="postscript-scene" class="postscript-scene" aria-label="Postscript">
       <svg
-        class="postscript-coastline"
-        viewBox={NORWAY_VIEWBOX}
+        class="postscript-dragon"
+        viewBox={dragonViewBox}
         preserveAspectRatio="xMidYMid meet"
         aria-hidden="true"
       >
-        <path class="norway-land" d={NORWAY_LAND_PATH} />
-        <path class="norway-coastline" d={NORWAY_COASTLINE_PATH} />
+        {dragonStages.map((stage) => (
+          <path
+            class="postscript-dragon-path"
+            data-stage={stage.stage}
+            d={stage.d}
+            vector-effect="non-scaling-stroke"
+          />
+        ))}
       </svg>
       <p class="postscript-label">A postscript</p>
       <hr class="postscript-divider" />

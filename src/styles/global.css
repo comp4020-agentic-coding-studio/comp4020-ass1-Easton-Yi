@@ -1,5 +1,6 @@
 :root {
   --mist: #b9cbd0;
+  --ice: #dfeaed;
   --sky: #99bdca;
   --fjord: #317ea2;
   --fjord-deep: #245f80;
@@ -698,7 +699,7 @@ a {
   padding: var(--space-7) var(--space-5);
   text-align: center;
   overflow: hidden;
-  background: var(--mist);
+  background: linear-gradient(180deg, var(--ice) 0%, var(--mist) 100%);
   color: var(--ink);
 }
 
@@ -708,26 +709,35 @@ a {
   }
 }
 
-.postscript-coastline {
+.postscript-dragon {
   position: absolute;
-  right: -4%;
-  bottom: -8%;
-  width: 40%;
-  max-width: 16rem;
-  height: auto;
+  inset: 0;
   z-index: 0;
-  opacity: 0.28;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  pointer-events: none;
 }
 
-.postscript-coastline .norway-land {
-  fill: none;
-}
-
-.postscript-coastline .norway-coastline {
-  fill: none;
+.postscript-dragon-path {
   stroke: var(--fjord-deep);
-  stroke-width: 2px;
-  vector-effect: non-scaling-stroke;
+  stroke-width: 1.5px;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.postscript-dragon-path[data-stage="1"].revealed {
+  opacity: 0.35;
+}
+
+.postscript-dragon-path[data-stage="2"].revealed {
+  opacity: 0.22;
+  transition-delay: 0.2s;
+}
+
+.postscript-dragon-path[data-stage="3"].revealed {
+  opacity: 0.16;
+  transition-delay: 0.4s;
 }
 
 .postscript-label,
@@ -1204,7 +1214,8 @@ a {
   .crossfade-koch,
   .crossfade-norway,
   .postscript-line,
-  .postscript-final {
+  .postscript-final,
+  .postscript-dragon-path {
     transition: none;
   }
 
