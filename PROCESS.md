@@ -1,7 +1,7 @@
 # Process overview
 
-A reading-guide to how the work came together --- a map to your process, not an
-essay about it.
+## The deployed URL: 
+https://comp4020-agentic-coding-studio.github.io/comp4020-ass1-Easton-Yi/
 
 ## What I built
 
@@ -182,6 +182,35 @@ before moving on.
    touch untouched, and finding the fix's real location instead of the
    convenient one
    ([`62e953f`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass1-Easton-Yi/commit/62e953f65fce0cdaa9fbfc7f660dc73a2961b6b7)).
+
+10. **Added a whole extra scene, deliberately, to make the core argument
+    land without more prose.** The resolution scene already stated "ruler
+    determines granularity, granularity determines the answer" in words, but
+    the claim itself was still abstract --- nothing on the page let a
+    visitor see a ruler choice turn into a different number. Rather than
+    add another paragraph, a new session was inserted before the
+    postscript: the same real Norway coastline (`src/lib/norway.ts`),
+    simplified at build time with a from-scratch Douglas-Peucker pass
+    (`src/lib/simplify.ts`) into three tiers, shown side by side as
+    "Roughly" / "More detailed" / "Finer grained", each paired with one of
+    three real, differently-sourced published coastline lengths (CIA World
+    Factbook 25,148 km; Statistics Norway 28,953 km mainland+fjords;
+    Statistics Norway 100,915 km with all islands --- documented in
+    `docs/CONTENT_SOURCES.md`, none presented as the single correct
+    figure) and a small ruler mark sized to match ("Ruler:" plus a longer
+    bar for the coarse tier, shrinking tier to tier). The point wasn't
+    theoretical completeness --- it was giving the "ruler is part of the
+    answer" claim a visible, concrete counterpart: three different rulers,
+    three different measured lengths, from the one coastline. An initial
+    two-layer (base outline + highlighted overlay) version was explicitly
+    rejected on sight as unclear and reverted to a single ink-coloured
+    outline per panel; the simplification tolerances were then swept and
+    re-screenshotted until the three tiers were visually separable rather
+    than guessed at; and the ruler marks went through several rounds of
+    resizing (first far too large relative to the panels, corrected down to
+    a small corner mark) purely from looking at rendered screenshots at
+    both marking viewports, not from a rule computed in advance
+    ([`0a65734`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass1-Easton-Yi/commit/0a65734684aefd484c7c0d9ceb8f340976118a7b)).
 
 ## Before you ship
 
