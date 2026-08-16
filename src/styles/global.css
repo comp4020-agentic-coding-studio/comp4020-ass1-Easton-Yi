@@ -662,7 +662,7 @@ a {
 
 .resolution-final {
   max-width: var(--measure-wide);
-  margin: calc(var(--space-7) * 3.6) 0 calc(var(--space-7) * 2);
+  margin: calc(var(--space-7) * 5.4) 0 calc(var(--space-7) * 3);
   text-align: center;
   font-size: var(--font-heading);
   line-height: var(--line-heading);
@@ -733,6 +733,14 @@ a {
   color: #f00;
 }
 
+.postscript-divider {
+  width: calc(100% + var(--space-5) * 2);
+  height: 1px;
+  margin: calc(var(--space-5) * -1 + var(--space-1)) calc(var(--space-5) * -1) 0;
+  border: none;
+  background: rgb(from var(--ink) r g b / 30%);
+}
+
 .postscript-line,
 .postscript-final {
   margin: 0;
@@ -766,8 +774,13 @@ a {
   line-height: var(--line-body);
 }
 
+.postscript-divider + .postscript-line {
+  margin-top: calc(var(--space-5) * 2);
+}
+
 .postscript-final {
   max-width: var(--measure-wide);
+  margin-bottom: calc(var(--space-5) * 2);
   text-align: center;
   font-size: var(--font-heading);
   line-height: var(--line-heading);

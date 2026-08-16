@@ -137,6 +137,52 @@ before moving on.
    pane
    ([`0de8955`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass1-Easton-Yi/commit/0de89558786e58c4c676c89cfd1bb8828a27d99d)).
 
+7. **Walked the resolution scene from a math lecture back to a narrated
+   idea, then deliberately kept the sharper phrase.** The scene had drifted
+   toward hardcore math representation --- a general dimension formula, the
+   snowflake's `log₃4`, and Sierpinski's `1.585` stacked in sequence. The
+   redesign moved the emphasis back to the problem/idea itself: a shorter,
+   more narrated pathway where the numbers support the story instead of
+   reading like a derivation. In the same pass, the earlier, softer
+   conclusion line was reconsidered against the original "the ruler is part
+   of the answer" phrasing (`docs/PROJECT_BRIEF.md`'s original idea, sanded
+   off earlier in the "global ruler correction"). "Ruler" was picked back
+   deliberately, not by accident: it's the more thought-provoking phrase
+   once it's paired with a standing plain-language definition, so the
+   metaphor does its work instead of getting explained away
+   ([`04e3bec`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass1-Easton-Yi/commit/04e3bec86f5d482757f9975906c1695c7ed6449e)).
+
+8. **A `max-width` inherited from a shared selector was silently overriding a
+   `width` set later in the cascade.** Asked to make the Britain/Norway
+   crossfade figures full-size and side-by-side, setting
+   `.crossfade-container { width: min(90vw, 36rem) }` had no visible effect ---
+   a shared rule (`.resolution-line, .dimension-scale, .crossfade-container {
+   max-width: var(--measure) }`) still capped the rendered width to the
+   38ch reading measure, so the two figures kept wrapping onto separate rows
+   even at the 1920px viewport. Screenshotting the actual rendered element
+   (not just trusting the CSS I'd written) showed the wrap; adding an
+   explicit `max-width: min(90vw, 36rem)` override on `.crossfade-container`
+   itself fixed it, confirmed side-by-side at 1920x1080 and correctly still
+   stacked at 390x844, where there genuinely isn't room for both at full
+   size. Same commit also renamed the Koch dimension-scale's "Koch boundary"
+   label to "Koch snowflake" for consistency with the resolution copy, and
+   added a second dimension scale marking Britain and Norway's coastline
+   dimensions on the same line-to-plane scale
+   ([`978238a`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass1-Easton-Yi/commit/978238a1e217fe730a1e13b5105a1090b4587325)).
+
+9. **A fade-out was the actual bug, not its timing.** The postscript
+   readout ("Iteration 5 · D ≈ 1.26") was the only element on the page that
+   both revealed and un-revealed, breaking the site's own "reveal once,
+   monotonically" convention --- so no amount of retuning the fade-out delay
+   stopped it reading as a flash. It was deleted outright rather than
+   re-timed. In the same pass, an unrequested wording edit to the idea
+   scene (made to dodge a `ruler-audit` conflict) was reverted to its
+   original line, with the audit instead satisfied by rewording the
+   journal-entry paragraph alone --- keeping a page I'd been told not to
+   touch untouched, and finding the fix's real location instead of the
+   convenient one
+   ([`62e953f`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass1-Easton-Yi/commit/62e953f65fce0cdaa9fbfc7f660dc73a2961b6b7)).
+
 ## Before you ship
 
 `pnpm check:evidence` verifies your citations resolve to real commits, that
