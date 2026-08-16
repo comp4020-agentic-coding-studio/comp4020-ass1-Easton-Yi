@@ -221,7 +221,18 @@ const revealCopy = [
             >
               <path class="norway-coastline" d={BRITAIN_COASTLINE_PATH} />
             </svg>
-            <figcaption class="country-label">Britain&rsquo;s island</figcaption>
+            <figcaption class="country-label">
+              <span class="country-label-row">
+                <button
+                  type="button"
+                  class="dimension-trigger"
+                  aria-expanded="false"
+                  aria-label="Show Britain's coastline dimension"
+                ><span class="dimension-triangle" aria-hidden="true"></span></button>
+                Britain&rsquo;s island
+              </span>
+              <span class="dimension-reveal">D &asymp; 1.21</span>
+            </figcaption>
           </figure>
           <figure class="country-figure country-figure-norway">
             <svg
@@ -232,12 +243,23 @@ const revealCopy = [
               <path class="norway-land" d={NORWAY_LAND_PATH} />
               <path class="norway-coastline" d={NORWAY_COASTLINE_PATH} />
             </svg>
-            <figcaption class="country-label">Norway</figcaption>
+            <figcaption class="country-label">
+              <span class="country-label-row">
+                <button
+                  type="button"
+                  class="dimension-trigger"
+                  aria-expanded="false"
+                  aria-label="Show Norway's coastline dimension"
+                ><span class="dimension-triangle" aria-hidden="true"></span></button>
+                Norway
+              </span>
+              <span class="dimension-reveal">D &asymp; 1.52</span>
+            </figcaption>
           </figure>
         </div>
       </div>
       <p class="resolution-label resolution-label-gap resolution-lead-gap" data-stage="11">
-        Coastlines are not perfect fractals, but have this dimension of complexity.
+        Coastlines aren’t exact fractals—but they behave like them.
       </p>
       <div
         class="dimension-scale"
@@ -268,16 +290,18 @@ const revealCopy = [
         But there is a way to estimate coastline dimensions based on the formula <i>D</i> = 1 − log<sub><i>G</i></sub>(<i>L</i>/<i>M</i>). <span class="figure-highlight">For the Norway costline, this is a whopping 1.52 dimensions!</span>
         (World's highest-dimensional coastline~)
       </p>
-      <p class="resolution-line" data-stage="14">
-        Calculating every coastline length depends on which details count, especially for those
+      <p class="resolution-line journal-entry" data-stage="14">
+        <span class="journal-entry-text">
+          When measuring a coastline, you must decide which details count. A coarse measurement skips small bays and bends;
+          a finer measurement follows them and produces a longer result.
+          For an ideal fractal boundary, this increase never settles—so a coastline has no single length until its scale and convention are fixed. Here, the &ldquo;ruler&rdquo;&mdash;we mean the smallest length you measure with&mdash;is the smallest detail your measurement keeps, not the scale of the map.
+          The chosen resolution is part of the answer.
+        </span>
       </p>
       <p class="resolution-final" data-stage="15">
         What we choose to ignore
         <br />
         is part of the answer.
-      </p>
-      <p class="resolution-gloss">
-        By &ldquo;ruler,&rdquo; we mean the smallest length you measure with.
       </p>
     </section>
     <section id="postscript-scene" class="postscript-scene" aria-label="Postscript">
@@ -290,9 +314,6 @@ const revealCopy = [
         <path class="norway-land" d={NORWAY_LAND_PATH} />
         <path class="norway-coastline" d={NORWAY_COASTLINE_PATH} />
       </svg>
-      <p class="postscript-readout" id="postscript-readout" aria-hidden="true">
-        Iteration 5 &middot; D &#8776; 1.262
-      </p>
       <p class="postscript-label">A postscript</p>
       <p class="postscript-line" data-stage="1">
         We use simple measures
@@ -313,5 +334,6 @@ const revealCopy = [
   <script src="../scripts/idea-scene.ts"></script>
   <script src="../scripts/koch-scene.ts"></script>
   <script src="../scripts/resolution.ts"></script>
+  <script src="../scripts/dimension-reveal.ts"></script>
   <script src="../scripts/postscript.ts"></script>
 </Layout>

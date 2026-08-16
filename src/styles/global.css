@@ -373,6 +373,56 @@ a {
   margin-top: calc(var(--space-5) * 2.0);
 }
 
+/* The "chosen resolution" paragraph reads as a found object — a single leaf
+   from a sailing journal laid over the scene, not another line of body copy
+   — so its own claim (measurement is a choice, not a given) gets a beat of
+   its own before the closing lines. Semi-transparent so the resolution
+   scene's gradient stays visible through the page, per the "somehow
+   transparent" brief. */
+.journal-entry {
+  position: relative;
+  padding: var(--space-6) var(--space-6) var(--space-5);
+  background:
+    repeating-linear-gradient(
+      transparent 0 1.6em,
+      rgb(from var(--ink) r g b / 6%) 1.6em calc(1.6em + 1px)
+    ),
+    linear-gradient(160deg, rgb(from var(--foam) r g b / 55%) 0%, rgb(from var(--mist) r g b / 40%) 100%);
+  border: 1px solid rgb(from var(--ink) r g b / 18%);
+  border-radius: 2px 14px 4px 12px / 10px 3px 12px 4px;
+  box-shadow: 0.25rem 0.4rem 1rem rgb(from var(--ink) r g b / 15%);
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  color: rgb(from var(--ink) r g b / 88%);
+  transform: translateY(0.5rem) rotate(-1.1deg);
+}
+
+.journal-entry.revealed {
+  transform: rotate(-1.1deg);
+}
+
+/* Folded page corner, torn-edge cue that this is a physical scrap rather
+   than a UI card. */
+.journal-entry::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  background: linear-gradient(
+    135deg,
+    transparent 50%,
+    rgb(from var(--mist) r g b / 70%) 50%
+  );
+  border-bottom-left-radius: 2px;
+  box-shadow: -0.1rem 0.1rem 0.2rem rgb(from var(--ink) r g b / 12%);
+}
+
+.journal-entry-text {
+  display: block;
+}
+
 /* Wraps the "curves that nearly fill the plane" aside so a faint Hilbert
    curve (a different fractal from the page's one worked Koch example) can
    sit behind the text, illustrating "convoluted" without a second worked
@@ -533,6 +583,51 @@ a {
   font-weight: 600;
   color: rgb(from var(--ink) r g b / 70%);
   white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.country-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+}
+
+.dimension-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1);
+  margin: calc(var(--space-1) * -1);
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.dimension-triangle {
+  width: 0;
+  height: 0;
+  border-top: 0.3rem solid transparent;
+  border-bottom: 0.3rem solid transparent;
+  border-left: 0.4rem solid var(--fjord-deep);
+  transition: transform 0.2s ease;
+}
+
+.dimension-trigger[aria-expanded="true"] .dimension-triangle {
+  transform: rotate(90deg);
+}
+
+.dimension-reveal {
+  color: var(--fjord-deep);
+  font-weight: 700;
+  visibility: hidden;
+}
+
+.dimension-reveal.is-visible {
+  visibility: visible;
 }
 
 .crossfade-norway {
@@ -567,20 +662,11 @@ a {
 
 .resolution-final {
   max-width: var(--measure-wide);
-  margin: var(--space-7) 0;
+  margin: calc(var(--space-7) * 3.6) 0 calc(var(--space-7) * 2);
   text-align: center;
   font-size: var(--font-heading);
   line-height: var(--line-heading);
   font-weight: 700;
-}
-
-/* Defines the "ruler" metaphor used earlier on the idea page (see
-   spec/ruler-audit.test.ts) in a quiet aside, not as a second lesson. */
-.resolution-gloss {
-  margin: 0;
-  text-align: center;
-  font-size: 0.85rem;
-  color: var(--fjord-deep);
 }
 
 /* Postscript coda (docs/EPILOGUE.md): same pale mist field as Act 3. A small
@@ -632,21 +718,6 @@ a {
   vector-effect: non-scaling-stroke;
 }
 
-.postscript-readout {
-  position: relative;
-  z-index: 1;
-  margin: 0;
-  font-family: ui-monospace, "SF Mono", monospace;
-  font-size: 0.85rem;
-  color: var(--fjord-deep);
-  opacity: 1;
-  transition: opacity 0.6s ease;
-}
-
-.postscript-readout.faded {
-  opacity: 0;
-}
-
 .postscript-label,
 .postscript-line,
 .postscript-final {
@@ -659,7 +730,7 @@ a {
   font-size: 0.85rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--fjord-deep);
+  color: #f00;
 }
 
 .postscript-line,
@@ -1107,8 +1178,7 @@ a {
   .crossfade-koch,
   .crossfade-norway,
   .postscript-line,
-  .postscript-final,
-  .postscript-readout {
+  .postscript-final {
     transition: none;
   }
 
