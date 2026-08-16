@@ -1,3 +1,13 @@
 # esbuild (used by Vite) needs its postinstall to set up its native binary.
 allowBuilds:
   esbuild: true
+
+# Force patched versions of transitive devDependencies flagged by Dependabot
+# (js-yaml quadratic-CPU CVE, undici cache/CRLF/cookie CVEs, fast-uri host
+# confusion, postcss sourceMappingURL read) --- none of these ship to the
+# built site, but the toolchain should still run patched code.
+overrides:
+  js-yaml: "^4.3.1"
+  undici: "^7.29.0"
+  fast-uri: ">=3.1.5"
+  postcss: ">=8.5.23"
