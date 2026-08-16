@@ -1,5 +1,15 @@
 # 后记 — Implementation Prompt
 
+Status: historical implementation prompt, kept for record. It was executed,
+then revised twice after shipping — the exact copy below ("every ruler
+leaves something out" / "when our ruler does") was worded to "every
+measurement leaves something out" / "where our measurement stops" during the
+ruler-terminology correction, and the plain Norway-coastline background was
+later replaced with a scroll-revealed dragon curve motif
+(`src/lib/dragon.ts`, see `PROCESS.md`). Read the current source
+(`#postscript-scene` in `src/pages/index.astro`) for what is actually
+deployed; this file records the brief that started it.
+
 Use this prompt only after the Norway question, Koch interaction, measurement readouts, and mathematical resolution are working and verified. This is a short final coda within the same continuous page, not a fourth explanatory topic.
 
 ## Purpose
