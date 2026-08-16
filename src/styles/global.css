@@ -638,8 +638,29 @@ a {
   border-bottom: 0.4rem solid currentcolor;
 }
 
-/* Small follow-on line under the group caption, in the same ink used for
-   the coastline outlines themselves (not a lighter caption tint). */
+/* A small, slightly slanted drawn ruler icon following the note text ---
+   same ink as the words, sized to about half a word's width so it reads
+   as a playful sign-off, not a diagram. */
+.coastline-samples-note-ruler {
+  display: inline-block;
+  width: 1.7em;
+  height: 2.25em;
+  margin-left: 0.35em;
+  vertical-align: middle;
+  transform: rotate(-45deg);
+  stroke: var(--ink);
+  stroke-width: 3px;
+  stroke-linecap: round;
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.coastline-samples-note-ruler-body {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3px;
+}
+
 .coastline-samples-note {
   margin: calc(var(--space-2) * 5.5) 0 0;
   text-align: center;
