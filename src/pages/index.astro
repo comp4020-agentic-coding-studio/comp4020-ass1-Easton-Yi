@@ -2,6 +2,11 @@
 import Layout from "../layouts/Layout.astro";
 import { NORWAY_LAND_PATH, NORWAY_COASTLINE_PATH, NORWAY_VIEWBOX } from "../lib/norway.ts";
 import { BRITAIN_COASTLINE_PATH, BRITAIN_VIEWBOX } from "../lib/britain.ts";
+import {
+  NORWAY_OUTLINE_ROUGH_PATH,
+  NORWAY_OUTLINE_DETAILED_PATH,
+  NORWAY_OUTLINE_FINE_PATH,
+} from "../lib/coastline-samples.ts";
 import { generateKochPoints, kochPathD, MAX_ITERATION } from "../lib/koch.ts";
 import { generateHilbertPoints, hilbertPathD } from "../lib/hilbert.ts";
 import { generateDragonPoints, dragonPathD, getDragonViewBox } from "../lib/dragon.ts";
@@ -313,7 +318,91 @@ const revealCopy = [
           Here, the &ldquo;ruler&rdquo; means the smallest detail your measurement keeps, not the scale of the map. The granularity we choose is part of the answer.
         </span>
       </p>
-      <p class="resolution-final" data-stage="15">
+      <p class="resolution-label resolution-label-gap resolution-lead-gap" data-stage="15">
+        You can measure finer, but there is no single &ldquo;true length&rdquo;.
+      </p>
+      <p class="resolution-line" data-stage="16">
+        You can make your ruler smaller, and the measured result will be more detailed, but also bigger. Look closer, and there is always more detail to measure.
+      </p>
+      <p class="resolution-line" data-stage="17">
+        The result depends on your ruler, not the coastline. (true but seems unbelievable)
+      </p>
+      <div
+        class="crossfade-container coastline-samples"
+        data-stage="18"
+      >
+        <div
+          class="crossfade-countries"
+          aria-label="Norway's own coastline traced at three measuring resolutions: roughly, more detailed, and finer grained"
+        >
+          <figure class="country-figure">
+            <div class="coastline-plot">
+              <svg
+                class="crossfade-norway"
+                viewBox={NORWAY_VIEWBOX}
+                preserveAspectRatio="xMidYMid meet"
+                aria-hidden="true"
+              >
+                <path class="norway-coastline" d={NORWAY_OUTLINE_ROUGH_PATH} />
+              </svg>
+              <span class="coastline-ruler-group">
+                <span class="coastline-ruler-tag">Ruler:</span>
+                <span class="coastline-ruler coastline-ruler-rough"></span>
+              </span>
+            </div>
+            <figcaption class="country-label">
+              <span>Roughly</span>
+              <span class="coastline-length">length = 25,148 km</span>
+            </figcaption>
+          </figure>
+          <figure class="country-figure">
+            <div class="coastline-plot">
+              <svg
+                class="crossfade-norway"
+                viewBox={NORWAY_VIEWBOX}
+                preserveAspectRatio="xMidYMid meet"
+                aria-hidden="true"
+              >
+                <path class="norway-coastline" d={NORWAY_OUTLINE_DETAILED_PATH} />
+              </svg>
+              <span class="coastline-ruler-group">
+                <span class="coastline-ruler-tag">Ruler:</span>
+                <span class="coastline-ruler coastline-ruler-detailed"></span>
+              </span>
+            </div>
+            <figcaption class="country-label">
+              <span>More detailed</span>
+              <span class="coastline-length">length = 28,953 km</span>
+            </figcaption>
+          </figure>
+          <figure class="country-figure">
+            <div class="coastline-plot">
+              <svg
+                class="crossfade-norway"
+                viewBox={NORWAY_VIEWBOX}
+                preserveAspectRatio="xMidYMid meet"
+                aria-hidden="true"
+              >
+                <path class="norway-coastline" d={NORWAY_OUTLINE_FINE_PATH} />
+              </svg>
+              <span class="coastline-ruler-group">
+                <span class="coastline-ruler-tag">Ruler:</span>
+                <span class="coastline-ruler coastline-ruler-fine"></span>
+              </span>
+            </div>
+            <figcaption class="country-label">
+              <span>Finer grained</span>
+              <span class="coastline-length">length = 100,915 km</span>
+            </figcaption>
+          </figure>
+        </div>
+        <p class="coastline-samples-caption">
+          <span class="coastline-samples-caption-triangle" aria-hidden="true"></span>
+          Measured Coastline Length for Norway
+        </p>
+        <p class="coastline-samples-note">Measured length correlates with your ruler.</p>
+      </div>
+      <p class="resolution-final" data-stage="19">
         Details we choose to ignore
         <br />
         is part of the answer.

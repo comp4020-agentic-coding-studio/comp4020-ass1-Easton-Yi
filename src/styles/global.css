@@ -591,6 +591,62 @@ a {
   z-index: 2;
 }
 
+/* Three simplification tolerances of the one real Norway coastline
+   (src/lib/coastline-samples.ts) — wider than the two-country row above so
+   each of the three panels can be a little bigger, and set further apart
+   from the paragraph above it than the section's normal flex rhythm. */
+.coastline-samples {
+  width: min(90vw, 44rem);
+  max-width: min(90vw, 44rem);
+  margin-top: var(--space-6);
+}
+
+.coastline-samples .country-figure {
+  width: min(50vw, 13rem);
+}
+
+/* One of three published measured lengths for Norway's coastline (see
+   docs/CONTENT_SOURCES.md), paired with the granularity that produced it —
+   a smaller number is not a wrong measurement, just a coarser ruler. */
+.coastline-length {
+  font-weight: 400;
+  color: rgb(from var(--ink) r g b / 55%);
+}
+
+/* Footer for the three panels as a whole, naming what they all share
+   (one real coastline) rather than repeating per-panel. Set further below
+   the panels than the label-to-length gap above it. */
+.coastline-samples-caption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: var(--space-7) 0 0;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgb(from var(--ink) r g b / 70%);
+}
+
+/* Small solid triangle in the same disclosure-triangle shape as
+   .dimension-triangle, pointing up at the panels this caption names. */
+.coastline-samples-caption-triangle {
+  width: 0;
+  height: 0;
+  border-left: 0.3rem solid transparent;
+  border-right: 0.3rem solid transparent;
+  border-bottom: 0.4rem solid currentcolor;
+}
+
+/* Small follow-on line under the group caption, in the same ink used for
+   the coastline outlines themselves (not a lighter caption tint). */
+.coastline-samples-note {
+  margin: calc(var(--space-2) * 5.5) 0 0;
+  text-align: center;
+  font-weight: 700;
+  color: var(--ink);
+}
+
 .country-label {
   font-size: 0.75rem;
   font-weight: 600;
@@ -643,6 +699,49 @@ a {
   visibility: visible;
 }
 
+/* Positions each panel's ruler mark relative to just the plot, not the
+   whole figure (which also carries the label/length caption below). */
+.coastline-plot {
+  position: relative;
+  width: 100%;
+}
+
+/* A small ruler mark in each panel's lower-right corner: a longer bar for
+   a coarser tier, a shorter one for a finer tier, echoing the "smaller
+   ruler, more detail" idea the panels themselves already show. */
+.coastline-ruler-group {
+  position: absolute;
+  right: 4%;
+  bottom: 6%;
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
+.coastline-ruler-tag {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: rgb(from var(--ink) r g b / 55%);
+  white-space: nowrap;
+}
+
+.coastline-ruler {
+  height: 2px;
+  background: rgb(from var(--ink) r g b / 55%);
+}
+
+.coastline-ruler-rough {
+  width: 0.55rem;
+}
+
+.coastline-ruler-detailed {
+  width: 0.35rem;
+}
+
+.coastline-ruler-fine {
+  width: 0.2rem;
+}
+
 .crossfade-norway {
   width: 100%;
   height: auto;
@@ -675,7 +774,7 @@ a {
 
 .resolution-final {
   max-width: var(--measure-wide);
-  margin: calc(var(--space-7) * 5.4) 0 calc(var(--space-7) * 3);
+  margin: calc(var(--space-7) * 2) 0 calc(var(--space-7) * 3);
   text-align: center;
   font-size: var(--font-heading);
   line-height: var(--line-heading);

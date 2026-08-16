@@ -218,6 +218,27 @@ Norway's coastline in the resolution scene (`data-stage="10"`).
 
 Do not use the reference screenshot as an asset or trace its exact pixels. It may guide colour balance and silhouette placement only.
 
+## Published coastline length figures
+
+Three real, differently-sourced measured lengths for Norway's coastline,
+shown next to the three simplification tiers in the resolution scene
+(`data-stage="18"`, `src/pages/index.astro`) as evidence that measured
+length depends on convention, not as one "official" number:
+
+- **25,148 km** — CIA World Factbook figure (mainland coastline 2,650 km
+  plus fjords/islands/minor indentations 22,498 km).
+  https://theodora.com/world_fact_book_2024/norway/norway_geography.html
+- **28,953 km** — Statistics Norway's 2011 recalculation, mainland and
+  fjords only, excluding islands.
+- **100,915 km** — the same 2011 Statistics Norway recalculation,
+  including all islands and fjords (the figure commonly cited as
+  "enough to circle the Earth two and a half times").
+  https://www.lifeinnorway.net/norway-coast/
+
+Per the "Claims that must not appear" rule above, none of these three is
+presented as the single correct figure — they are shown together,
+increasing with granularity, to make the same point the interaction does.
+
 ## Interaction and accessibility sources
 
 ### W3C — Animation from Interactions
